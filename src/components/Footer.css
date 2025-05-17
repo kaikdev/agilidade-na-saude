@@ -61,6 +61,15 @@ ul.footer-list a:hover {
     }
 }
 
+@media (max-width: 600px) {
+    .logo-footer {
+        max-width: 120px;
+    }
+    .logo-footer img {
+        width: 100%;
+    }
+}
+
 @media (max-width: 480px) {
     .footer-right {
         flex-wrap: wrap;
