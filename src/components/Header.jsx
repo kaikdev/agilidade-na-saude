@@ -1,15 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import logoImg from '../assets/images/logo.png'
 import './Header.css';
 
 function Header() {
     const [menuActive, setMenuActive] = useState(false);
+    const timeoutRef = useRef(null);
 
-    function toggleMenu(event) {
-        if (event.type === 'touchstart') event.preventDefault();
-        
-        setMenuActive(!menuActive);
+    function toggleMenu() {
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+
+        timeoutRef.current = setTimeout(() => {
+            setMenuActive(!menuActive);
+            timeoutRef.current = null;
+        }, 100);
+    }
+
+    function handleTouchStart(event) {
+        event.preventDefault();
+        toggleMenu();
     }
 
     return (
@@ -19,14 +30,14 @@ function Header() {
             </Link>
 
             <nav id="nav" className={menuActive ? 'active' : ''}>
-                <button 
+                <button
                     aria-label={menuActive ? 'Fechar Menu' : 'Abrir Menu'}
-                    id="btn-mobile" 
-                    aria-haspopup="true" 
-                    aria-controls="menu" 
+                    id="btn-mobile"
+                    aria-haspopup="true"
+                    aria-controls="menu"
                     aria-expanded={menuActive}
                     onClick={toggleMenu}
-                    onTouchStart={toggleMenu}
+                    onTouchStart={handleTouchStart}
                 >
                     <span id="hamburger"></span>
                 </button>
