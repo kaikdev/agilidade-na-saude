@@ -114,6 +114,48 @@ h6.tag-section {
     font-size: 18px;
 }
 
+.section-depoiments {
+    text-align: center;
+}
+
+.section-depoiments h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.splide__list li.splide__slide {
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+}
+
+div#depoimentos-track {
+    padding: 1px !important;
+}
+
+.section-depoiments .area-img {
+    width: 100px;
+    height: 100px;
+    min-width: 100px;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    margin: 0 auto;
+}
+
+p.name-depoiment {
+    font-weight: 600;
+    margin: 10px 0;
+}
+
+
+
 @media (max-width: 1200px) {
     .section-about .area-img img {
         width: 500px;

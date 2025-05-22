@@ -1,10 +1,23 @@
 import React, { useState } from 'react';
+import { Splide, SplideSlide } from '@splidejs/react-splide';
+import '@splidejs/react-splide/css';
 import './HomePage.css';
 import imgDoctor from '../assets/images/doctor.png';
 import imgTempo from '../assets/images/economia-de-tempo.png';
 import imgEcologico from '../assets/images/ecologico.png';
 import imgAcesso from '../assets/images/tecnologia.png';
 import imgSobre from '../assets/images/sobre.jpg';
+import imgPessoa1 from '../assets/images/pessoa-1.jpg';
+import imgPessoa2 from '../assets/images/pessoa-2.jpg';
+import imgPessoa3 from '../assets/images/pessoa-3.jpg';
+import imgPessoa4 from '../assets/images/pessoa-4.jpg';
+
+/*
+import imgPessoa5 from '../assets/images/pessoa-5.jpg';
+import imgPessoa6 from '../assets/images/pessoa-6.jpg';
+import imgPessoa7 from '../assets/images/pessoa-7.jpg';
+import imgPessoa8 from '../assets/images/pessoa-8.jpg';
+*/
 
 function HomePage() {
     return (
@@ -71,6 +84,89 @@ function HomePage() {
                     </p>
                 </div>
             </section>
+
+            <section className="section-depoiments" id="depoimentos">
+                <h6 className="tag-section">Depoimentos</h6>
+
+                <h2>
+                    O que os clientes dizem
+                    <br></br>
+                    sobre nosso sistema
+                </h2>
+
+                <Splide
+                    options={{
+                        type: 'loop',
+                        perPage: 4,
+                        autoplay: false,
+                        interval: 3000,
+                        gap: '1rem',
+                    }}
+                    aria-label="Carrossel de Depoimentos" tag="section" id="depoimentos">
+
+                    <SplideSlide>
+                        <div className="item-depoiment">
+                            <div className="area-img" style={{backgroundImage: `url(${imgPessoa1})`}}>
+                            </div>
+
+                            <p className="name-depoiment">
+                                Maria Eduarda
+                            </p>
+
+                            <p className="desc-depoiment">
+                                Nunca foi tão fácil agendar! Chega de filas gigantes e horas de espera. Agora consigo organizar tudo do meu celular. O sistema é muito prático e mudou minha rotina. Super recomendo a todos!
+                            </p>
+                        </div>
+                    </SplideSlide>
+
+                    <SplideSlide>
+                        <div className="item-depoiment">
+                            <div className="area-img" style={{backgroundImage: `url(${imgPessoa2})`}}>
+                            </div>
+
+                            <p className="name-depoiment">
+                                Ana Clara
+                            </p>
+
+                            <p className="desc-depoiment">
+                                O Agilidade na Saúde é demais! Antes, eu perdia muito tempo esperando, mas agora acompanho tudo online. Consigo cuidar da minha saúde sem complicação. É a inovação que o Brasil precisava.
+                            </p>
+                        </div>    
+                    </SplideSlide>
+
+                    <SplideSlide>
+                        <div className="item-depoiment">
+                            <div className="area-img" style={{backgroundImage: `url(${imgPessoa3})`}}>
+                            </div>
+
+                            <p className="name-depoiment">
+                                Isabela Ferreira
+                            </p>
+
+                            <p className="desc-depoiment">
+                                Finalmente um sistema que pensa na gente! Consigo ver minha posição na fila e sou avisada quando está perto. É muito mais cômodo e seguro. Parabéns à equipe do Agilidade na Saúde!
+                            </p>
+                        </div>  
+                    </SplideSlide>
+
+                    <SplideSlide>
+                        <div className="item-depoiment">
+                            <div className="area-img" style={{backgroundImage: `url(${imgPessoa4})`}}>
+                            </div>
+
+                            <p className="name-depoiment">
+                                Beatriz Pereira
+                            </p>
+
+                            <p className="desc-depoiment">
+                                Eu tinha receio, mas o aplicativo é muito simples e funcional. Consegui agendar minha consulta em poucos cliques. O benefício de não pegar fila é incrível. Uma ferramenta indispensável hoje.
+                            </p>
+                        </div>  
+                    </SplideSlide>
+                </Splide>
+            </section>
+
+
         </main>
     );
 }
