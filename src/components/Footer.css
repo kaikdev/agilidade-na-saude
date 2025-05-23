@@ -33,6 +33,7 @@ ul.footer-list a {
     padding: 2px 0;
     color: #fff;
     margin-bottom: 5px;
+    white-space: nowrap;
 }
 
 ul.footer-list a:hover {
@@ -60,7 +61,6 @@ ul.footer-list a:hover {
         width: 100%;
     }
 }
-
 @media (max-width: 600px) {
     .logo-footer {
         max-width: 120px;
@@ -69,10 +69,19 @@ ul.footer-list a:hover {
         width: 100%;
     }
 }
-
 @media (max-width: 480px) {
+    footer.footer {
+        padding: 1.5rem;
+        gap: 1rem;
+        font-size: 14px;
+    }
+    .footer-right {
+        gap: 1rem;
+    }
+    
+}
+@media (max-width: 350px) {
     .footer-right {
         flex-wrap: wrap;
-        gap: 2rem;
     }
 }
