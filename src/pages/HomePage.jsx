@@ -11,13 +11,10 @@ import imgPessoa1 from '../assets/images/pessoa-1.jpg';
 import imgPessoa2 from '../assets/images/pessoa-2.jpg';
 import imgPessoa3 from '../assets/images/pessoa-3.jpg';
 import imgPessoa4 from '../assets/images/pessoa-4.jpg';
-
-/*
 import imgPessoa5 from '../assets/images/pessoa-5.jpg';
 import imgPessoa6 from '../assets/images/pessoa-6.jpg';
 import imgPessoa7 from '../assets/images/pessoa-7.jpg';
 import imgPessoa8 from '../assets/images/pessoa-8.jpg';
-*/
 
 function HomePage() {
     return (
@@ -97,12 +94,22 @@ function HomePage() {
                 <Splide
                     options={{
                         type: 'loop',
-                        perPage: 4,
-                        autoplay: false,
+                        perPage: 3,
+                        perMove: 1,
+                        autoplay: true,
                         interval: 3000,
                         gap: '1rem',
+                        breakpoints: {
+                            900: {
+                                perPage: 2,
+                                interval: 5000
+                            },
+                            600: {
+                                perPage: 1,
+                            }
+                        }
                     }}
-                    aria-label="Carrossel de Depoimentos" tag="section" id="depoimentos">
+                    aria-label="Carrossel de Depoimentos" tag="section" id="splide-depoimentos">
 
                     <SplideSlide>
                         <div className="item-depoiment">
@@ -125,6 +132,21 @@ function HomePage() {
                             </div>
 
                             <p className="name-depoiment">
+                                João Pedro
+                            </p>
+
+                            <p className="desc-depoiment">
+                                Fui surpreendido pela facilidade de uso do sistema. É intuitivo e me ajudou muito a conseguir uma consulta gratuita sem estresse. Menos papel, mais agilidade, tudo o que eu buscava.
+                            </p>
+                        </div>
+                    </SplideSlide>
+
+                    <SplideSlide>
+                        <div className="item-depoiment">
+                            <div className="area-img" style={{backgroundImage: `url(${imgPessoa3})`}}>
+                            </div>
+
+                            <p className="name-depoiment">
                                 Ana Clara
                             </p>
 
@@ -133,10 +155,25 @@ function HomePage() {
                             </p>
                         </div>    
                     </SplideSlide>
+                    
+                    <SplideSlide>
+                        <div className="item-depoiment">
+                            <div className="area-img" style={{backgroundImage: `url(${imgPessoa4})`}}>
+                            </div>
+
+                            <p className="name-depoiment">
+                                Lucas Gabriel
+                            </p>
+
+                            <p className="desc-depoiment">
+                                Que diferença faz um sistema organizado! Agora sei a hora certa de sair de casa para meu atendimento. Acabou a agonia das filas. É uma ferramenta essencial para a saúde pública gratuita.
+                            </p>
+                        </div>
+                    </SplideSlide>
 
                     <SplideSlide>
                         <div className="item-depoiment">
-                            <div className="area-img" style={{backgroundImage: `url(${imgPessoa3})`}}>
+                            <div className="area-img" style={{backgroundImage: `url(${imgPessoa5})`}}>
                             </div>
 
                             <p className="name-depoiment">
@@ -148,10 +185,25 @@ function HomePage() {
                             </p>
                         </div>  
                     </SplideSlide>
+                    
+                    <SplideSlide>
+                        <div className="item-depoiment">
+                            <div className="area-img" style={{backgroundImage: `url(${imgPessoa6})`}}>
+                            </div>
+
+                            <p className="name-depoiment">
+                                Rafael Rodrigues
+                            </p>
+
+                            <p className="desc-depoiment">
+                                Com o Agilidade na Saúde, o tempo de espera diminuiu muito. Posso usar esse tempo para outras coisas importantes. É um avanço enorme para quem precisa de atendimento gratuito. Fantástico!
+                            </p>
+                        </div>
+                    </SplideSlide>
 
                     <SplideSlide>
                         <div className="item-depoiment">
-                            <div className="area-img" style={{backgroundImage: `url(${imgPessoa4})`}}>
+                            <div className="area-img" style={{backgroundImage: `url(${imgPessoa7})`}}>
                             </div>
 
                             <p className="name-depoiment">
@@ -162,6 +214,21 @@ function HomePage() {
                                 Eu tinha receio, mas o aplicativo é muito simples e funcional. Consegui agendar minha consulta em poucos cliques. O benefício de não pegar fila é incrível. Uma ferramenta indispensável hoje.
                             </p>
                         </div>  
+                    </SplideSlide>
+
+                    <SplideSlide>
+                        <div className="item-depoiment">
+                            <div className="area-img" style={{backgroundImage: `url(${imgPessoa8})`}}>
+                            </div>
+
+                            <p className="name-depoiment">
+                                Guilherme Alves
+                            </p>
+
+                            <p className="desc-depoiment">
+                                É impressionante como o Agilidade na Saúde otimiza tudo. Acompanho a fila de casa e sou chamado na hora certa. Isso realmente facilita o acesso ao médico sem custo. Grande iniciativa!
+                            </p>
+                        </div>
                     </SplideSlide>
                 </Splide>
             </section>

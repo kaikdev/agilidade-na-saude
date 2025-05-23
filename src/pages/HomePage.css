@@ -107,6 +107,7 @@ h6.tag-section {
 }
 
 .section-about h2 {
+    font-weight: 700;
     margin-bottom: 1rem;
 }
 
@@ -130,8 +131,33 @@ h6.tag-section {
     box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
 }
 
-div#depoimentos-track {
+div#splide-depoimentos-track {
     padding: 1px !important;
+}
+
+.splide__pagination {
+    bottom: -1.5rem;
+}
+
+.splide__pagination__page {
+    width: 10px;
+    height: 10px;
+    transform: none !important;
+}
+
+.splide__pagination__page.is-active,
+.splide__arrow {
+    background-color: #0074E5;
+}
+
+.splide__arrow svg {
+    fill: #fff;
+    width: 12px;
+    height: 12px;
+}
+
+section#splide-depoimentos {
+    margin-bottom: 2.5rem;
 }
 
 .section-depoiments .area-img {
@@ -153,8 +179,6 @@ p.name-depoiment {
     font-weight: 600;
     margin: 10px 0;
 }
-
-
 
 @media (max-width: 1200px) {
     .section-about .area-img img {
@@ -188,6 +212,11 @@ p.name-depoiment {
     }
     .section-about > div {
         width: 100% !important;
+        display: inline-grid;
+    }
+    .section-about h6.tag-section {
+        margin: 0 auto;
+        margin-bottom: 1rem;
     }
     .section-about .area-img img {
         width: 100%;
@@ -212,5 +241,15 @@ p.name-depoiment {
 @media (max-width: 600px) {
     img.img-main {
         width: 100%;
+    }
+    .splide__arrow {
+        width: 1.5em;
+        height: 1.5em;
+    }
+    .splide__arrow--prev {
+        left: -0.5rem;
+    }
+    .splide__arrow--next {
+        right: -0.5rem;
     }
 }
