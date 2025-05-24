@@ -358,6 +358,99 @@ function HomePage() {
                     </div>
                 </div>
             </section>
+
+            {/* Modal de Login */}
+            <div className="modal fade" id="modalLogin" tabindex="-1" aria-labelledby="modalLoginLabel" aria-hidden="true">
+                <div className="modal-dialog modal-login modal-dialog-centered">
+                    <div className="modal-content">
+                        <div className="modal-body">
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+
+                            <h6 className="modal-title" id="modalLoginLabel">Login</h6>
+
+                            <form for="#">
+                                <div className="item-input mb-3">
+                                    <label className="icon-input" for="loginEmail">
+                                        <i class="fa-solid fa-envelope"></i>
+                                    </label>
+
+                                    <input type="email" id="loginEmail" placeholder="Digite seu email" />
+                                </div>
+
+                                <div className="item-input mb-3">
+                                    <label className="icon-input" for="loginSenha">
+                                        <i class="fa-solid fa-lock"></i>
+                                    </label>
+                                    
+                                    <input type="password" id="loginSenha" placeholder="Digite sua senha" />
+                                </div>
+
+                                <button className="btn-default mb-3" type="submit">Entrar</button>
+                            </form>
+                            
+                            <a className="forgot-password" href="#">
+                                Esqueceu a senha?
+                            </a>
+
+                            <div className="footer-login">
+                                <span>
+                                    Não tem uma conta?
+                                    
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalCadastro" data-bs-dismiss="modal">
+                                        Cadastre-se
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Modal de Cadastro */}
+            <div className="modal fade" id="modalCadastro" tabindex="-1" aria-labelledby="modalCadastroLabel" aria-hidden="true">
+                <div className="modal-dialog modal-login modal-dialog-centered">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="modalCadastroLabel">Cadastro</h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                        </div>
+
+                        <div className="modal-body">
+                            <form>
+                                <div className="mb-3">
+                                    <label for="cadastroNome" className="form-label">Nome</label>
+                                    <input type="text" className="form-control" id="cadastroNome" placeholder="Digite seu nome completo" />
+                                </div>
+
+                                <div className="mb-3">
+                                    <label for="cadastroEmail" className="form-label">Email</label>
+                                    <input type="email" className="form-control" id="cadastroEmail" placeholder="Digite seu email" />
+                                </div>
+
+                                <div className="mb-3">
+                                    <label for="cadastroData" className="form-label">Data de Nascimento</label>
+                                    <input type="date" className="form-control" id="cadastroData" />
+                                </div>
+
+                                <div className="mb-3">
+                                    <label for="cadastroSenha" className="form-label">Senha</label>
+                                    <input type="password" className="form-control" id="cadastroSenha" placeholder="Crie uma senha" />
+                                </div>
+
+                                <button type="submit" className="btn btn-success w-100">Cadastrar</button>
+                            </form>
+                        </div>
+
+                        <div className="modal-footer">
+                            <span>Já tem uma conta?
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#modalLogin" data-bs-dismiss="modal">
+                                    Entrar
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
     );
 }
