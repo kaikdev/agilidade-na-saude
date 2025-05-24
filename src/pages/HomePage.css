@@ -333,6 +333,7 @@ section.section-faq {
 
 .footer-login a {
     margin-left: 5px;
+    white-space: nowrap;
 }
 
 #modalCadastro .item-input {
