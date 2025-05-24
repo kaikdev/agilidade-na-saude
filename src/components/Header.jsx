@@ -44,16 +44,16 @@ function Header() {
 
                 <ul id="menu" role="menu">
                     <li>
-                        <a href="#sobre">Sobre</a>
+                        <a href="#sobre" onClick={() => setMenuActive(false)}>Sobre</a>
                     </li>
                     <li>
-                        <a href="#depoimentos">Depoimentos</a>
+                        <a href="#depoimentos" onClick={() => setMenuActive(false)}>Depoimentos</a>
                     </li>
                     <li>
-                        <a href="#faq">FAQ</a>
+                        <a href="#faq" onClick={() => setMenuActive(false)}>FAQ</a>
                     </li>
                     <li>
-                        <a href="#login">Login</a>
+                        <a href="#login" onClick={() => setMenuActive(false)}>Login</a>
                     </li>
                 </ul>
             </nav>

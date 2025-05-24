@@ -230,12 +230,17 @@ section.section-faq {
     font-weight: 500;
 }
 
+#sobre,
+#depoimentos,
+#faq {
+    scroll-margin-top: 80px;
+}
+
 @media (max-width: 1200px) {
     .section-about .area-img img {
         width: 500px;
     }
 }
-
 @media (max-width: 1100px) {
     .title-main {
         width: 100%;
@@ -253,7 +258,6 @@ section.section-faq {
         background: #0074E5 !important;
     }
 }
-
 @media (max-width: 900px) {
     .section-about {
         flex-direction: column;
@@ -271,7 +275,6 @@ section.section-faq {
         width: 100%;
     }
 }
-
 @media (max-width: 800px) {
     .section-quality {
         flex-direction: column;
@@ -286,7 +289,6 @@ section.section-faq {
         width: 65px;
     }
 }
-
 @media (max-width: 600px) {
     main.main-home {
         gap: 1rem;

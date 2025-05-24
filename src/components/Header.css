@@ -7,6 +7,10 @@
     justify-content: space-between;
     background: #fff;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 0px 5px 0px;
+    position: sticky;
+    top: 0px;
+    left: 0px;
+    z-index: 99999;
 }
 
 #menu {
@@ -19,11 +23,13 @@
     display: block;
     padding: 0.5rem;
     font-weight: 500;
+    border-radius: 5px;
     color: #0074e5;
 }
 
 #menu a:hover {
-    background: rgba(0, 0, 0, 0.05);
+    transition: .2s;
+    background: rgb(0 129 255 / 15%);
 }
 
 #btn-mobile {
