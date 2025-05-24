@@ -360,7 +360,7 @@ function HomePage() {
             </section>
 
             {/* Modal de Login */}
-            <div className="modal fade" id="modalLogin" tabindex="-1" aria-labelledby="modalLoginLabel" aria-hidden="true">
+            <div className="modal fade" id="modalLogin" tabIndex="-1" aria-labelledby="modalLoginLabel" aria-hidden="true">
                 <div className="modal-dialog modal-login modal-dialog-centered">
                     <div className="modal-content">
                         <div className="modal-body">
@@ -368,18 +368,18 @@ function HomePage() {
 
                             <h6 className="modal-title" id="modalLoginLabel">Login</h6>
 
-                            <form for="#">
+                            <form htmlFor="#">
                                 <div className="item-input mb-3">
-                                    <label className="icon-input" for="loginEmail">
-                                        <i class="fa-solid fa-envelope"></i>
+                                    <label className="icon-input" htmlFor="loginEmail">
+                                        <i className="fa-solid fa-envelope"></i>
                                     </label>
 
                                     <input type="email" id="loginEmail" placeholder="Digite seu email" />
                                 </div>
 
                                 <div className="item-input mb-3">
-                                    <label className="icon-input" for="loginSenha">
-                                        <i class="fa-solid fa-lock"></i>
+                                    <label className="icon-input" htmlFor="loginSenha">
+                                        <i className="fa-solid fa-lock"></i>
                                     </label>
                                     
                                     <input type="password" id="loginSenha" placeholder="Digite sua senha" />
@@ -395,7 +395,7 @@ function HomePage() {
                             <div className="footer-login">
                                 <span>
                                     Não tem uma conta?
-                                    
+
                                     <a href="#" data-bs-toggle="modal" data-bs-target="#modalCadastro" data-bs-dismiss="modal">
                                         Cadastre-se
                                     </a>
@@ -407,46 +407,51 @@ function HomePage() {
             </div>
 
             {/* Modal de Cadastro */}
-            <div className="modal fade" id="modalCadastro" tabindex="-1" aria-labelledby="modalCadastroLabel" aria-hidden="true">
+            <div className="modal fade" id="modalCadastro" tabIndex="-1" aria-labelledby="modalCadastroLabel" aria-hidden="true">
                 <div className="modal-dialog modal-login modal-dialog-centered">
                     <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title" id="modalCadastroLabel">Cadastro</h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                        </div>
-
                         <div className="modal-body">
-                            <form>
-                                <div className="mb-3">
-                                    <label for="cadastroNome" className="form-label">Nome</label>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+
+                            <h6 className="modal-title" id="modalCadastroLabel">Cadastro</h6>
+
+                            <form htmlFor="#">
+                                <div className="item-input mb-3">
+                                    <label htmlFor="cadastroNome">Nome</label>
+
                                     <input type="text" className="form-control" id="cadastroNome" placeholder="Digite seu nome completo" />
                                 </div>
 
-                                <div className="mb-3">
-                                    <label for="cadastroEmail" className="form-label">Email</label>
+                                <div className="item-input mb-3">
+                                    <label htmlFor="cadastroEmail">Email</label>
+
                                     <input type="email" className="form-control" id="cadastroEmail" placeholder="Digite seu email" />
                                 </div>
 
-                                <div className="mb-3">
-                                    <label for="cadastroData" className="form-label">Data de Nascimento</label>
+                                <div className="item-input mb-3">
+                                    <label htmlFor="cadastroData">Data de Nascimento</label>
+
                                     <input type="date" className="form-control" id="cadastroData" />
                                 </div>
 
-                                <div className="mb-3">
-                                    <label for="cadastroSenha" className="form-label">Senha</label>
+                                <div className="item-input mb-3">
+                                    <label htmlFor="cadastroSenha">Senha</label>
+
                                     <input type="password" className="form-control" id="cadastroSenha" placeholder="Crie uma senha" />
                                 </div>
 
-                                <button type="submit" className="btn btn-success w-100">Cadastrar</button>
+                                <button type="submit" className="btn-default">Cadastrar</button>
                             </form>
-                        </div>
 
-                        <div className="modal-footer">
-                            <span>Já tem uma conta?
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#modalLogin" data-bs-dismiss="modal">
-                                    Entrar
-                                </a>
-                            </span>
+                            <div className="footer-login">
+                                <span>
+                                    Já tem uma conta?
+
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalCadastro" data-bs-dismiss="modal">
+                                        Entrar
+                                    </a>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
