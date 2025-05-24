@@ -15,6 +15,7 @@ import imgPessoa5 from '../assets/images/pessoa-5.jpg';
 import imgPessoa6 from '../assets/images/pessoa-6.jpg';
 import imgPessoa7 from '../assets/images/pessoa-7.jpg';
 import imgPessoa8 from '../assets/images/pessoa-8.jpg';
+import imgFaq from '../assets/images/faq.jpg';
 
 function HomePage() {
     return (
@@ -28,7 +29,7 @@ function HomePage() {
 
                 <img src={imgDoctor} className="img-main"  alt="Logo Agilidade na Saúde" width="400px" height="auto"/>
             </section>
-
+            
             <section className="section-quality">
                 <div className="item-quality">
                     <div className="img-quality">
@@ -61,6 +62,8 @@ function HomePage() {
                 </div>
             </section>
 
+            <div className="div-separator"></div>
+
             <section className="section-about" id="sobre">
                 <div className="area-img">
                     <img src={imgSobre}  alt="Imagem Sobre" width="650px" height="auto"/>
@@ -81,6 +84,8 @@ function HomePage() {
                     </p>
                 </div>
             </section>
+
+            <div className="div-separator"></div>
 
             <section className="section-depoiments" id="depoimentos">
                 <h6 className="tag-section">Depoimentos</h6>
@@ -232,8 +237,127 @@ function HomePage() {
                     </SplideSlide>
                 </Splide>
             </section>
+            
+            <div className="div-separator"></div>
 
+            <section className="section-faq" id="faq">
+                <h6 className="tag-section">FAQ - Perguntas Frequentes</h6>
 
+                <h2>
+                    Tire suas dúvidas sobre o
+                    <br></br>
+                    Agilidade na Saúde
+                </h2>
+                
+                <div className="area-faq">
+                    <div className="area-img">
+                        <img src={imgFaq}  alt="Imagem FAQ - Perguntas frequentes" width="100%" height="auto"/>
+                    </div>
+
+                    <div className="accordion" id="accordionFaq">
+                        <div className="accordion-item">
+                            <h6 className="accordion-header" id="headingOne">
+                                <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                    Como posso me cadastrar para começar a usar o Agilidade na Saúde ?
+                                </button>
+                            </h6>
+
+                            <div id="collapseOne" className="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionFaq">
+                                <div className="accordion-body">
+                                    <p>
+                                        O Agilidade na Saúde oferece duas opções de cadastro:
+                                        
+                                        <li>
+                                            Para Médicos: Se você é um profissional de saúde e deseja disponibilizar seu serviço gratuito para a população, nosso sistema te ajuda a organizar a fila de atendimento de forma eficiente.
+                                        </li>
+                                    
+                                        
+                                        <li>
+                                            Para Pacientes: Ao se cadastrar como paciente, você pode agendar em atendimentos específicos ou visualizar as oportunidades de atendimento médico gratuito disponíveis para ser atendido.
+                                        </li>
+
+                                        Ambos os cadastros são simples e práticos, feitos diretamente pelo sistema online.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="accordion-item">
+                            <h6 className="accordion-header" id="headingTwo">
+                                <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    O sistema Agilidade na Saúde é realmente gratuito para o usuário ?
+                                </button>
+                            </h6>
+
+                            <div id="collapseTwo" className="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionFaq">
+                                <div className="accordion-body">
+                                    <p>
+                                        Sim, absolutamente! 
+                                        <br></br>
+                                        O Agilidade na Saúde foi criado com o objetivo de ser 100% gratuito para todos os usuários, sejam eles pacientes ou médicos. 
+                                        <br></br>
+                                        Além disso, somos um projeto open-source, reforçando nosso compromisso com a acessibilidade e a comunidade.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="accordion-item">
+                            <h6 className="accordion-header" id="headingThree">
+                                <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    Como o Agilidade na Saúde me ajuda a evitar longas esperas em filas ?
+                                </button>
+                            </h6>
+
+                            <div id="collapseThree" className="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionFaq">
+                                <div className="accordion-body">
+                                    <p>
+                                        O Agilidade na Saúde organiza as filas de forma digital, o que significa que o processo de atendimento se torna mais rápido e simples. 
+                                        <br></br>
+                                        Você não precisa mais esperar horas presencialmente, pois o sistema te permite acompanhar sua posição e gerenciar sua vez de forma eficiente.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="accordion-item">
+                            <h6 className="accordion-header" id="headingFour">
+                                <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                    Preciso instalar algo no meu celular ou computador para usar o sistema ?
+                                </button>
+                            </h6>
+
+                            <div id="collapseFour" className="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionFaq">
+                                <div className="accordion-body">
+                                    <p>
+                                        Não, não é necessário instalar nada! 
+                                        <br></br>
+                                        O Agilidade na Saúde é um sistema totalmente online. Basta acessá-lo diretamente pelo navegador do seu celular, tablet ou computador para começar a usar e aproveitar todos os benefícios.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="accordion-item">
+                            <h6 className="accordion-header" id="headingFive">
+                                <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                    Posso agendar ou apenas acompanhar atendimentos médicos gratuitos pelo Agilidade na Saúde ?
+                                </button>
+                            </h6>
+
+                            <div id="collapseFive" className="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#accordionFaq">
+                                <div className="accordion-body">
+                                    <p>
+                                        Pelo Agilidade na Saúde, você pode coletar uma senha disponível para um atendimento médico gratuito e, posteriormente, acompanhar todo o andamento dessa senha. 
+                                        <br></br>
+                                        Nosso foco é otimizar sua experiência na fila, desde a reserva da sua senha até o momento do atendimento.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </main>
     );
 }
