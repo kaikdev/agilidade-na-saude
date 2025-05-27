@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './Modal.css';
+import usePasswordToggle from '../../hooks/usePasswordToggle';
 
 function LoginModal() {
+    const [showPasswordStates, togglePasswordVisibility] = usePasswordToggle({
+        loginSenha: false,
+    });
+    
     return (
         /* Modal de Login */
         <div className="modal fade" id="modalLogin" tabIndex="-1" aria-labelledby="modalLoginLabel" aria-hidden="true">
@@ -22,12 +27,23 @@ function LoginModal() {
                                 <input type="email" id="loginEmail" placeholder="Digite seu email" />
                             </div>
 
-                            <div className="item-input mb-3">
+                            <div className="item-input password mb-3">
                                 <label className="icon-input" htmlFor="loginSenha">
                                     <i className="fa-solid fa-lock"></i>
                                 </label>
 
-                                <input type="password" id="loginSenha" placeholder="Digite sua senha" />
+                                <input 
+                                    type={showPasswordStates.loginSenha ? 'text' : 'password'}
+                                    id="loginSenha" 
+                                    placeholder="Digite sua senha" 
+                                />
+
+                                <button className="show-password" type="button" onClick={() => togglePasswordVisibility('loginSenha')}>
+                                    {showPasswordStates.loginSenha ? 
+                                        (<i className="fa-solid fa-eye-slash"></i>) : 
+                                        (<i className="fa-solid fa-eye"></i>)
+                                    }
+                                </button>
                             </div>
 
                             <button className="btn-default mb-3" type="submit">Entrar</button>

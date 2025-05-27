@@ -184,3 +184,31 @@ div.swal2-html-container {
 div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-confirm) {
     background-color: #0074e5 !important;
 }
+
+.item-input.password {
+    position: relative;
+}
+
+.item-input.password input {
+    padding-right: 40px;
+}
+
+.item-input button.show-password {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    height: 40px;
+    width: 40px;
+    font-size: 15px;
+    border-radius: 0px 5px 5px 0px;
+    border: none !important;
+    background-color: transparent;
+}
+
+.item-input button.show-password:hover {
+    transition: .2s;
+    background-color: #dfdfdf;
+}

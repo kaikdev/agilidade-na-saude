@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './Modal.css';
 import Swal from 'sweetalert2';
+import usePasswordToggle from '../../hooks/usePasswordToggle';
 
 function RegisterModal() {
     const [cadastroNome, setCadastroNome] = useState('');
@@ -17,6 +18,11 @@ function RegisterModal() {
     const [presentation, setPresentation] = useState('');
 
     const [cadastroLoading, setCadastroLoading] = useState(false);
+
+    const [showPasswordStates, togglePasswordVisibility] = usePasswordToggle({
+        cadastroSenha: false,
+        confirmarSenha: false,
+    });
 
     const formatBirthDateForAPI = (dateString) => {
         if (!dateString) return null;
@@ -278,11 +284,11 @@ function RegisterModal() {
                                 </div>
                             )}
 
-                            <div className="item-input mb-3">
+                            <div className="item-input password mb-3">
                                 <label htmlFor="cadastroSenha">Senha</label>
 
                                 <input
-                                    type="password"
+                                    type={showPasswordStates.cadastroSenha ? 'text' : 'password'}
                                     className="form-control"
                                     id="cadastroSenha"
                                     placeholder="Crie uma senha"
@@ -290,13 +296,20 @@ function RegisterModal() {
                                     onChange={(e) => setCadastroSenha(e.target.value)}
                                     required
                                 />
+
+                                <button className="show-password" type="button" onClick={() => togglePasswordVisibility('cadastroSenha')}>
+                                    {showPasswordStates.cadastroSenha ? 
+                                        (<i className="fa-solid fa-eye-slash"></i>) : 
+                                        (<i className="fa-solid fa-eye"></i>)
+                                    }
+                                </button>
                             </div>
 
-                            <div className="item-input mb-3">
+                            <div className="item-input password mb-3">
                                 <label htmlFor="confirmarSenha">Confirmar senha</label>
 
                                 <input
-                                    type="password"
+                                    type={showPasswordStates.confirmarSenha ? 'text' : 'password'}
                                     className="form-control"
                                     id="confirmarSenha"
                                     placeholder="Repita a senha"
@@ -304,6 +317,13 @@ function RegisterModal() {
                                     onChange={(e) => setConfirmarSenha(e.target.value)}
                                     required
                                 />
+
+                                <button className="show-password" type="button" onClick={() => togglePasswordVisibility('confirmarSenha')}>
+                                    {showPasswordStates.confirmarSenha ? 
+                                        (<i className="fa-solid fa-eye-slash"></i>) : 
+                                        (<i className="fa-solid fa-eye"></i>)
+                                    }
+                                </button>
                             </div>
 
                             <button type="submit" className="btn-default" disabled={cadastroLoading}>
