@@ -1,0 +1,158 @@
+.modal-backdrop.show {
+    opacity: 0.6 !important;
+}
+
+.modal-login .modal-content {
+    border-radius: 5px;
+    border: none;
+}
+
+.modal-login button.btn-close {
+    font-size: 14px;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+}
+
+.modal-login .modal-body {
+    padding: 3rem 1.5rem 1.5rem;
+    text-align: center;
+}
+
+.modal-login h6.modal-title {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.modal-login .item-input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-login .item-input input {
+    width: 100%;
+    height: 40px;
+    padding: 5px 10px;
+    border: 1px solid #dfdfdf;
+    border-radius: 0px 5px 5px 0px;
+    font-size: 16px;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.modal-login .item-input input:focus {
+    background-color: #f6f6f6;
+}
+
+.modal-login .icon-input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    border-radius: 5px 0px 0px 5px;
+    border-right: none;
+    border: 1px solid #dfdfdf;
+    background-color: #dfdfdf;
+    cursor: pointer;
+}
+
+.modal-login button.btn-default {
+    width: 100%;
+    height: 40px;
+    border-radius: 5px;
+    border: none;
+    padding: 5px 10px;
+    font-weight: 600;
+    background-color: #0074e5;
+    color: #fff;
+}
+
+.modal-login button.btn-default:hover {
+    transition: .2s;
+    background-color: #0065ca;
+}
+
+.modal-login a {
+    color: #0074e5;
+    font-weight: 400;
+}
+
+.modal-login a:hover {
+    text-decoration: underline;
+}
+
+.footer-login {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #dfdfdf;
+}
+
+.footer-login a {
+    margin-left: 5px;
+    white-space: nowrap;
+}
+
+#modalCadastro .item-input {
+    flex-direction: column;
+}
+
+#modalCadastro .item-input label,
+.item-input-user label {
+    display: block;
+    width: 100%;
+    text-align: left;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+#modalCadastro .item-input input {
+    border-radius: 5px;
+}
+
+.item-input-user {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+textarea#presentation {
+    font-size: 16px;
+}
+
+.item-input-user label {
+    font-size: 16px;
+    margin: 0px;
+}
+
+.item-input-user .btn-group {
+    width: 100%;
+}
+
+.item-input-user .btn-group label {
+    text-align: center;
+    border-color: #0074e5;
+}
+
+.item-input-user .btn-group label.active {
+    background-color: #0074e5;
+}
+
+.item-input-user .btn-group>.btn-group:not(:last-child)>.btn, 
+.item-input-user .btn-group>.btn.dropdown-toggle-split:first-child, 
+.item-input-user .btn-group>.btn:not(:last-child):not(.dropdown-toggle) {
+    border-radius: 5px 0px 0px 5px;
+}
+
+.item-input-user .btn-group>.btn-group:not(:first-child)>.btn,
+.item-input-user .btn-group>.btn:nth-child(n+3), 
+.item-input-user .btn-group>:not(.btn-check)+.btn {
+    border-radius: 0px 5px 5px 0px;
+}
+

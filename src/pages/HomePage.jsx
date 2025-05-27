@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/react-splide/css';
 import './HomePage.css';
@@ -27,33 +28,33 @@ function HomePage() {
                     <p>Um sistema eficiente para gerenciar o fluxo de pacientes e otimizar o acesso aos serviços de saúde.</p>
                 </div>
 
-                <img src={imgDoctor} className="img-main"  alt="Logo Agilidade na Saúde" width="400px" height="auto"/>
+                <img src={imgDoctor} className="img-main" alt="Logo Agilidade na Saúde" width="400px" height="auto" />
             </section>
-            
+
             <section className="section-quality">
                 <div className="item-quality">
                     <div className="img-quality">
-                        <img src={imgTempo}  alt="Imagem Agilidade" width="80px" height="auto"/>
+                        <img src={imgTempo} alt="Imagem Agilidade" width="80px" height="auto" />
                     </div>
 
                     <h5>Agilidade</h5>
 
                     <p>Otimize seu tempo de espera e o processo de atendimento, garantindo acesso mais rápido e eficiente aos serviços de saúde gratuitos.</p>
                 </div>
-                
+
                 <div className="item-quality">
                     <div className="img-quality">
-                        <img src={imgEcologico}  alt="Imagem Ecológico" width="80px" height="auto"/>
+                        <img src={imgEcologico} alt="Imagem Ecológico" width="80px" height="auto" />
                     </div>
 
                     <h5>Ecológico</h5>
 
                     <p>Contribua para o meio ambiente. Nossa fila online elimina a necessidade de senhas de papel, reduzindo o desperdício e a pegada ecológica.</p>
                 </div>
-                    
+
                 <div className="item-quality">
                     <div className="img-quality">
-                        <img src={imgAcesso}  alt="Imagem Acesso" width="80px" height="auto"/>
+                        <img src={imgAcesso} alt="Imagem Acesso" width="80px" height="auto" />
                     </div>
 
                     <h5>Acesso Fácil</h5>
@@ -66,20 +67,20 @@ function HomePage() {
 
             <section className="section-about" id="sobre">
                 <div className="area-img">
-                    <img src={imgSobre}  alt="Imagem Sobre" width="650px" height="auto"/>
+                    <img src={imgSobre} alt="Imagem Sobre" width="650px" height="auto" />
                 </div>
 
                 <div>
                     <h6 className="tag-section">Sobre o sistema</h6>
 
                     <h2>O que é o <strong>Agilidade na Saúde?</strong> </h2>
-                    
+
                     <p>
                         O <strong>Agilidade na Saúde</strong> é um sistema online criado para organizar as filas de atendimento médico gratuito.
-                        
+
                         <br></br>
-                        
-                        Nosso objetivo é simplificar e agilizar o acesso à saúde, eliminando a espera presencial e as senhas de papel, o que também contribui para o meio ambiente. 
+
+                        Nosso objetivo é simplificar e agilizar o acesso à saúde, eliminando a espera presencial e as senhas de papel, o que também contribui para o meio ambiente.
                         Com ele, você acompanha sua posição na fila de forma digital, garantindo um atendimento mais eficiente e digno para todos.
                     </p>
                 </div>
@@ -118,7 +119,7 @@ function HomePage() {
 
                     <SplideSlide>
                         <div className="item-depoiment">
-                            <div className="area-img" style={{backgroundImage: `url(${imgPessoa1})`}}>
+                            <div className="area-img" style={{ backgroundImage: `url(${imgPessoa1})` }}>
                             </div>
 
                             <p className="name-depoiment">
@@ -133,7 +134,7 @@ function HomePage() {
 
                     <SplideSlide>
                         <div className="item-depoiment">
-                            <div className="area-img" style={{backgroundImage: `url(${imgPessoa2})`}}>
+                            <div className="area-img" style={{ backgroundImage: `url(${imgPessoa2})` }}>
                             </div>
 
                             <p className="name-depoiment">
@@ -148,7 +149,7 @@ function HomePage() {
 
                     <SplideSlide>
                         <div className="item-depoiment">
-                            <div className="area-img" style={{backgroundImage: `url(${imgPessoa3})`}}>
+                            <div className="area-img" style={{ backgroundImage: `url(${imgPessoa3})` }}>
                             </div>
 
                             <p className="name-depoiment">
@@ -158,12 +159,12 @@ function HomePage() {
                             <p className="desc-depoiment">
                                 O Agilidade na Saúde é demais! Antes, eu perdia muito tempo esperando, mas agora acompanho tudo online. Consigo cuidar da minha saúde sem complicação. É a inovação que o Brasil precisava.
                             </p>
-                        </div>    
+                        </div>
                     </SplideSlide>
-                    
+
                     <SplideSlide>
                         <div className="item-depoiment">
-                            <div className="area-img" style={{backgroundImage: `url(${imgPessoa4})`}}>
+                            <div className="area-img" style={{ backgroundImage: `url(${imgPessoa4})` }}>
                             </div>
 
                             <p className="name-depoiment">
@@ -178,7 +179,7 @@ function HomePage() {
 
                     <SplideSlide>
                         <div className="item-depoiment">
-                            <div className="area-img" style={{backgroundImage: `url(${imgPessoa5})`}}>
+                            <div className="area-img" style={{ backgroundImage: `url(${imgPessoa5})` }}>
                             </div>
 
                             <p className="name-depoiment">
@@ -188,12 +189,12 @@ function HomePage() {
                             <p className="desc-depoiment">
                                 Finalmente um sistema que pensa na gente! Consigo ver minha posição na fila e sou avisada quando está perto. É muito mais cômodo e seguro. Parabéns à equipe do Agilidade na Saúde!
                             </p>
-                        </div>  
+                        </div>
                     </SplideSlide>
-                    
+
                     <SplideSlide>
                         <div className="item-depoiment">
-                            <div className="area-img" style={{backgroundImage: `url(${imgPessoa6})`}}>
+                            <div className="area-img" style={{ backgroundImage: `url(${imgPessoa6})` }}>
                             </div>
 
                             <p className="name-depoiment">
@@ -208,7 +209,7 @@ function HomePage() {
 
                     <SplideSlide>
                         <div className="item-depoiment">
-                            <div className="area-img" style={{backgroundImage: `url(${imgPessoa7})`}}>
+                            <div className="area-img" style={{ backgroundImage: `url(${imgPessoa7})` }}>
                             </div>
 
                             <p className="name-depoiment">
@@ -218,12 +219,12 @@ function HomePage() {
                             <p className="desc-depoiment">
                                 Eu tinha receio, mas o aplicativo é muito simples e funcional. Consegui agendar minha consulta em poucos cliques. O benefício de não pegar fila é incrível. Uma ferramenta indispensável hoje.
                             </p>
-                        </div>  
+                        </div>
                     </SplideSlide>
 
                     <SplideSlide>
                         <div className="item-depoiment">
-                            <div className="area-img" style={{backgroundImage: `url(${imgPessoa8})`}}>
+                            <div className="area-img" style={{ backgroundImage: `url(${imgPessoa8})` }}>
                             </div>
 
                             <p className="name-depoiment">
@@ -237,7 +238,7 @@ function HomePage() {
                     </SplideSlide>
                 </Splide>
             </section>
-            
+
             <div className="div-separator"></div>
 
             <section className="section-faq" id="faq">
@@ -248,10 +249,10 @@ function HomePage() {
                     <br></br>
                     Agilidade na Saúde
                 </h2>
-                
+
                 <div className="area-faq">
                     <div className="area-img">
-                        <img src={imgFaq}  alt="Imagem FAQ - Perguntas frequentes" width="100%" height="auto"/>
+                        <img src={imgFaq} alt="Imagem FAQ - Perguntas frequentes" width="100%" height="auto" />
                     </div>
 
                     <div className="accordion" id="accordionFaq">
@@ -266,12 +267,12 @@ function HomePage() {
                                 <div className="accordion-body">
                                     <p>
                                         O Agilidade na Saúde oferece duas opções de cadastro:
-                                        
+
                                         <li>
                                             Para Médicos: Se você é um profissional de saúde e deseja disponibilizar seu serviço gratuito para a população, nosso sistema te ajuda a organizar a fila de atendimento de forma eficiente.
                                         </li>
-                                    
-                                        
+
+
                                         <li>
                                             Para Pacientes: Ao se cadastrar como paciente, você pode agendar em atendimentos específicos ou visualizar as oportunidades de atendimento médico gratuito disponíveis para ser atendido.
                                         </li>
@@ -292,9 +293,9 @@ function HomePage() {
                             <div id="collapseTwo" className="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionFaq">
                                 <div className="accordion-body">
                                     <p>
-                                        Sim, absolutamente! 
+                                        Sim, absolutamente!
                                         <br></br>
-                                        O Agilidade na Saúde foi criado com o objetivo de ser 100% gratuito para todos os usuários, sejam eles pacientes ou médicos. 
+                                        O Agilidade na Saúde foi criado com o objetivo de ser 100% gratuito para todos os usuários, sejam eles pacientes ou médicos.
                                         <br></br>
                                         Além disso, somos um projeto open-source, reforçando nosso compromisso com a acessibilidade e a comunidade.
                                     </p>
@@ -312,7 +313,7 @@ function HomePage() {
                             <div id="collapseThree" className="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionFaq">
                                 <div className="accordion-body">
                                     <p>
-                                        O Agilidade na Saúde organiza as filas de forma digital, o que significa que o processo de atendimento se torna mais rápido e simples. 
+                                        O Agilidade na Saúde organiza as filas de forma digital, o que significa que o processo de atendimento se torna mais rápido e simples.
                                         <br></br>
                                         Você não precisa mais esperar horas presencialmente, pois o sistema te permite acompanhar sua posição e gerenciar sua vez de forma eficiente.
                                     </p>
@@ -330,7 +331,7 @@ function HomePage() {
                             <div id="collapseFour" className="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionFaq">
                                 <div className="accordion-body">
                                     <p>
-                                        Não, não é necessário instalar nada! 
+                                        Não, não é necessário instalar nada!
                                         <br></br>
                                         O Agilidade na Saúde é um sistema totalmente online. Basta acessá-lo diretamente pelo navegador do seu celular, tablet ou computador para começar a usar e aproveitar todos os benefícios.
                                     </p>
@@ -348,7 +349,7 @@ function HomePage() {
                             <div id="collapseFive" className="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#accordionFaq">
                                 <div className="accordion-body">
                                     <p>
-                                        Pelo Agilidade na Saúde, você pode coletar uma senha disponível para um atendimento médico gratuito e, posteriormente, acompanhar todo o andamento dessa senha. 
+                                        Pelo Agilidade na Saúde, você pode coletar uma senha disponível para um atendimento médico gratuito e, posteriormente, acompanhar todo o andamento dessa senha.
                                         <br></br>
                                         Nosso foco é otimizar sua experiência na fila, desde a reserva da sua senha até o momento do atendimento.
                                     </p>
@@ -358,145 +359,6 @@ function HomePage() {
                     </div>
                 </div>
             </section>
-
-            {/* Modal de Login */}
-            <div className="modal fade" id="modalLogin" tabIndex="-1" aria-labelledby="modalLoginLabel" aria-hidden="true">
-                <div className="modal-dialog modal-login modal-dialog-centered">
-                    <div className="modal-content">
-                        <div className="modal-body">
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-
-                            <h6 className="modal-title" id="modalLoginLabel">Login</h6>
-
-                            <form htmlFor="#">
-                                <div className="item-input mb-3">
-                                    <label className="icon-input" htmlFor="loginEmail">
-                                        <i className="fa-solid fa-envelope"></i>
-                                    </label>
-
-                                    <input type="email" id="loginEmail" placeholder="Digite seu email" />
-                                </div>
-
-                                <div className="item-input mb-3">
-                                    <label className="icon-input" htmlFor="loginSenha">
-                                        <i className="fa-solid fa-lock"></i>
-                                    </label>
-                                    
-                                    <input type="password" id="loginSenha" placeholder="Digite sua senha" />
-                                </div>
-
-                                <button className="btn-default mb-3" type="submit">Entrar</button>
-                            </form>
-                            
-                            <a className="forgot-password" href="#" data-bs-toggle="modal" data-bs-target="#modalRecover" data-bs-dismiss="modal">
-                                Esqueceu a senha?
-                            </a>
-
-                            <div className="footer-login">
-                                <span>
-                                    Não tem uma conta?
-
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalCadastro" data-bs-dismiss="modal">
-                                        Cadastre-se
-                                    </a>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Modal de Cadastro */}
-            <div className="modal fade" id="modalCadastro" tabIndex="-1" aria-labelledby="modalCadastroLabel" aria-hidden="true">
-                <div className="modal-dialog modal-login modal-dialog-centered">
-                    <div className="modal-content">
-                        <div className="modal-body">
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-
-                            <h6 className="modal-title" id="modalCadastroLabel">Cadastro</h6>
-
-                            <form htmlFor="#">
-                                <div className="item-input mb-3">
-                                    <label htmlFor="cadastroNome">Nome</label>
-
-                                    <input type="text" className="form-control" id="cadastroNome" placeholder="Digite seu nome completo" />
-                                </div>
-
-                                <div className="item-input mb-3">
-                                    <label htmlFor="cadastroEmail">Email</label>
-
-                                    <input type="email" className="form-control" id="cadastroEmail" placeholder="Digite seu email" />
-                                </div>
-
-                                <div className="item-input mb-3">
-                                    <label htmlFor="cadastroData">Data de Nascimento</label>
-
-                                    <input type="date" className="form-control" id="cadastroData" />
-                                </div>
-
-                                <div className="item-input mb-3">
-                                    <label htmlFor="cadastroSenha">Senha</label>
-
-                                    <input type="password" className="form-control" id="cadastroSenha" placeholder="Crie uma senha" />
-                                </div>
-
-                                <div className="item-input mb-3">
-                                    <label htmlFor="cadastroSenha">Confirmar senha</label>
-
-                                    <input type="password" className="form-control" id="confirmarSenha" placeholder="Repita a senha" />
-                                </div>
-
-                                <button type="submit" className="btn-default">Cadastrar</button>
-                            </form>
-
-                            <div className="footer-login">
-                                <span>
-                                    Já tem uma conta?
-
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalLogin" data-bs-dismiss="modal">
-                                        Entrar
-                                    </a>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Modal de Recuperação */}
-            <div className="modal fade" id="modalRecover" tabIndex="-1" aria-labelledby="modalRecoverLabel" aria-hidden="true">
-                <div className="modal-dialog modal-login modal-dialog-centered">
-                    <div className="modal-content">
-                        <div className="modal-body">
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-
-                            <h6 className="modal-title" id="modalRecoverLabel">Recuperar Senha</h6>
-
-                            <form htmlFor="#">
-                                <div className="item-input mb-3">
-                                    <label className="icon-input" htmlFor="recoverEmail">
-                                        <i className="fa-solid fa-envelope"></i>
-                                    </label>
-
-                                    <input type="email" id="recoverEmail" placeholder="Digite seu email" />
-                                </div>
-
-                                <button className="btn-default" type="submit">Recuperar</button>
-                            </form>
-
-                            <div className="footer-login">
-                                <span>
-                                    Lembrou a sua senha?
-
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalLogin" data-bs-dismiss="modal">
-                                        Entrar
-                                    </a>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </main>
     );
 }
