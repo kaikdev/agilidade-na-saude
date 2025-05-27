@@ -153,38 +153,6 @@ textarea#presentation {
     border-radius: 0px 5px 5px 0px;
 }
 
-h2.swal2-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-}
-
-div.swal2-html-container {
-    font-size: 18px;
-    font-weight: 500;
-}
-
-.swal2-actions button {
-    font-size: 16px;
-    height: 40px;
-    border-radius: 5px;
-    border: none;
-    padding: 5px 15px;
-}
-
-.swal2-icon.swal2-icon-show {
-    margin-top: 1.5rem;
-    margin-bottom: 0px;
-    transform: scale(0.85);
-}
-
-.swal2-popup.swal2-modal.swal2-show {
-    padding-bottom: 1.5rem;
-}
-
-div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-confirm) {
-    background-color: #0074e5 !important;
-}
-
 .item-input.password {
     position: relative;
 }
