@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './Modal.css';
+import Swal from 'sweetalert2';
 
 function RegisterModal() {
     const [cadastroNome, setCadastroNome] = useState('');
@@ -15,8 +16,6 @@ function RegisterModal() {
     const [specialty, setSpecialty] = useState('');
     const [presentation, setPresentation] = useState('');
 
-    const [cadastroError, setCadastroError] = useState('');
-    const [cadastroSuccess, setCadastroSuccess] = useState('');
     const [cadastroLoading, setCadastroLoading] = useState(false);
 
     const formatBirthDateForAPI = (dateString) => {
@@ -28,12 +27,14 @@ function RegisterModal() {
     const handleCadastroSubmit = async (e) => {
         e.preventDefault();
 
-        setCadastroError('');
-        setCadastroSuccess('');
         setCadastroLoading(true);
 
         if (cadastroSenha !== confirmarSenha) {
-            setCadastroError('As senhas não coincidem.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'As senhas não coincidem. Por favor, verifique.',
+            });
             setCadastroLoading(false);
             return;
         }
@@ -54,11 +55,14 @@ function RegisterModal() {
                 role: 'user',
             };
             if (!cadastroData) {
-                setCadastroError('Data de Nascimento é obrigatória para Pacientes.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Atenção!',
+                    text: 'Data de Nascimento é obrigatória para Pacientes.',
+                });
                 setCadastroLoading(false);
                 return;
             }
-
         } 
         else if (selectedRole === 'admin') { // Cadastro de Médico (Admin)
             apiUrl = 'http://localhost:3001/api/admin';
@@ -69,13 +73,21 @@ function RegisterModal() {
                 presentation,
             };
             if (!crm || !specialty || !presentation) {
-                setCadastroError('Todos os campos (CRM, Especialidade, Apresentação) são obrigatórios para Médicos.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Atenção!',
+                    text: 'Todos os campos (CRM, Especialidade, Apresentação) são obrigatórios para Médicos.',
+                });
                 setCadastroLoading(false);
                 return;
             }
         } 
         else {
-            setCadastroError('Por favor, selecione o tipo de cadastro (Paciente ou Médico).');
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Por favor, selecione o tipo de cadastro (Paciente ou Médico).',
+            });
             setCadastroLoading(false);
             return;
         }
@@ -83,7 +95,13 @@ function RegisterModal() {
         try {
             const response = await axios.post(apiUrl, payload);
 
-            setCadastroSuccess(`Usuário (${selectedRole === 'user' ? 'Paciente' : 'Médico'}) cadastrado com sucesso!`);
+            Swal.fire({
+                icon: 'success',
+                title: 'Cadastro Realizado!',
+                text: `${selectedRole === 'user' ? 'Paciente' : 'Médico'} cadastrado com sucesso!`,
+                confirmButtonText: 'Ok'
+            });
+
             console.log('Cadastro realizado com sucesso:', response.data);
 
             // Limpar formulário
@@ -99,13 +117,22 @@ function RegisterModal() {
         } 
         catch (error) {
             console.error('Erro no cadastro:', error);
+
+            let errorMessage = 'Ocorreu um erro inesperado.';
+
             if (error.response) {
-                setCadastroError(error.response.data.error || 'Erro no servidor ao cadastrar.');
-            } else if (error.request) {
-                setCadastroError('Erro de rede: Servidor não responde.');
-            } else {
-                setCadastroError('Ocorreu um erro inesperado.');
+                errorMessage = error.response.data.error || 'Erro no servidor ao cadastrar.';
             }
+            else if (error.request) {
+                errorMessage = 'Erro de rede: Servidor não responde. Verifique sua conexão ou tente novamente mais tarde.';
+            } 
+            
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro no Cadastro!',
+                text: errorMessage,
+                confirmButtonText: 'Tentar Novamente'
+            });
         } 
         finally {
             setCadastroLoading(false);
@@ -278,10 +305,6 @@ function RegisterModal() {
                                     required
                                 />
                             </div>
-
-                            {/* Mensagens de feedback */}
-                            {cadastroError && <p style={{ color: 'red', marginTop: '10px' }}>{cadastroError}</p>}
-                            {cadastroSuccess && <p style={{ color: 'green', marginTop: '10px' }}>{cadastroSuccess}</p>}
 
                             <button type="submit" className="btn-default" disabled={cadastroLoading}>
                                 {cadastroLoading ? 'Cadastrando...' : 'Cadastrar'}
