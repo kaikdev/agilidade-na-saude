@@ -1,13 +1,80 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './Modal.css';
+import Swal from 'sweetalert2';
 import usePasswordToggle from '../../hooks/usePasswordToggle';
 
 function LoginModal() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+
     const [showPasswordStates, togglePasswordVisibility] = usePasswordToggle({
         loginSenha: false,
     });
     
+    // Função de submissão do formulário de login
+    const handleLoginSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+
+        try {
+            const response = await axios.post('http://localhost:3001/api/login', {
+                email,
+                password,
+            });
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Login Realizado!',
+                text: 'Você está logado. Redirecionando...',
+                timer: 1500,
+                showConfirmButton: false
+            }).then(() => {
+                // Lógica pós-login:
+                console.log('Login bem-sucedido:', response.data);
+                
+                // Armazenar o token no localStorage
+                // O token é essencial para acessar rotas protegidas
+                localStorage.setItem('authToken', response.data.token);
+
+                // Fechar o modal de login
+                const modalElement = document.getElementById('modalLogin');
+                if (modalElement) {
+                    const bootstrapModal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
+                    bootstrapModal.hide();
+                }
+
+                // Limpar campos do formulário
+                setEmail('');
+                setPassword('');
+
+                window.location.href = '/dashboard';
+            });
+        } 
+        catch (error) {
+            console.error('Erro no login:', error);
+            let errorMessage = 'Ocorreu um erro inesperado ao tentar logar.';
+
+            if (error.response) {
+                errorMessage = error.response.data.error || 'Credenciais inválidas ou erro no servidor.';
+            } else if (error.request) {
+                errorMessage = 'Erro de rede: Servidor não responde. Verifique sua conexão.';
+            } 
+            
+            Swal.fire({
+                icon: 'error',
+                title: 'Falha no Login!',
+                text: errorMessage,
+                confirmButtonText: 'Tentar Novamente'
+            });
+
+        } 
+        finally {
+            setLoading(false);
+        }
+    };
+
     return (
         /* Modal de Login */
         <div className="modal fade" id="modalLogin" tabIndex="-1" aria-labelledby="modalLoginLabel" aria-hidden="true">
@@ -18,13 +85,20 @@ function LoginModal() {
 
                         <h6 className="modal-title" id="modalLoginLabel">Login</h6>
 
-                        <form htmlFor="#">
+                        <form onSubmit={handleLoginSubmit}>
                             <div className="item-input mb-3">
                                 <label className="icon-input" htmlFor="loginEmail">
                                     <i className="fa-solid fa-envelope"></i>
                                 </label>
 
-                                <input type="email" id="loginEmail" placeholder="Digite seu email" />
+                                <input
+                                    type="email"
+                                    id="loginEmail"
+                                    placeholder="Digite seu email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                />
                             </div>
 
                             <div className="item-input password mb-3">
@@ -36,6 +110,9 @@ function LoginModal() {
                                     type={showPasswordStates.loginSenha ? 'text' : 'password'}
                                     id="loginSenha" 
                                     placeholder="Digite sua senha" 
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
                                 />
 
                                 <button className="show-password" type="button" onClick={() => togglePasswordVisibility('loginSenha')}>
@@ -46,7 +123,9 @@ function LoginModal() {
                                 </button>
                             </div>
 
-                            <button className="btn-default mb-3" type="submit">Entrar</button>
+                            <button className="btn-default mb-3" type="submit" disabled={loading}>
+                                {loading ? 'Entrando...' : 'Entrar'}
+                            </button>
                         </form>
 
                         <a className="forgot-password" href="#" data-bs-toggle="modal" data-bs-target="#modalRecover" data-bs-dismiss="modal">
