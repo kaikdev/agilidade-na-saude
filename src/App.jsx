@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer'
@@ -8,34 +7,33 @@ import RegisterModal from './components/modals/RegisterModal';
 import RecoverPasswordModal from './components/modals/RecoverPasswordModal';
 import DashboardPage from './pages/DashboardPage';
 import PrivateRoute from './middlewares/PrivateRoute';
+import { AuthProvider } from './context/AuthContext';
 import './App.css'
 
 function App() {
   return (
     <Router>
-      <Header />
-      
-      <LoginModal />
-      <RegisterModal />
-      <RecoverPasswordModal />
+      <AuthProvider>
+        <Header />
 
-      <Routes>
-        <Route path="/" element={<HomePage />} /> {/* Página inicial */}
-        
-        {/* Rotas Protegidas */}
-        <Route 
-          path="/dashboard" 
-          element={
+        <LoginModal />
+        <RegisterModal />
+        <RecoverPasswordModal />
+
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+
+          <Route path="/dashboard" element={
             <PrivateRoute>
               <DashboardPage />
-            </PrivateRoute>
-          } 
-        />
-      </Routes>
+            </PrivateRoute>} 
+          />
+        </Routes>
 
-      <Footer />
+        <Footer />
+      </AuthProvider>
     </Router>
-  )
+  );
 }
 
 export default App;

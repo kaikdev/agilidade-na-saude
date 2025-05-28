@@ -3,6 +3,7 @@ import axios from 'axios';
 import './Modal.css';
 import Swal from 'sweetalert2';
 import usePasswordToggle from '../../hooks/usePasswordToggle';
+import { useAuth } from '../../context/AuthContext';
 
 function LoginModal() {
     const [email, setEmail] = useState('');
@@ -13,6 +14,8 @@ function LoginModal() {
         loginSenha: false,
     });
     
+    const { login } = useAuth();
+
     // Função de submissão do formulário de login
     const handleLoginSubmit = async (e) => {
         e.preventDefault();
@@ -31,25 +34,16 @@ function LoginModal() {
                 timer: 1500,
                 showConfirmButton: false
             }).then(() => {
-                // Lógica pós-login:
-                console.log('Login bem-sucedido:', response.data);
-                
-                // Armazenar o token no localStorage
-                // O token é essencial para acessar rotas protegidas
-                localStorage.setItem('authToken', response.data.token);
+                login(response.data.token); 
 
-                // Fechar o modal de login
                 const modalElement = document.getElementById('modalLogin');
                 if (modalElement) {
                     const bootstrapModal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
                     bootstrapModal.hide();
                 }
 
-                // Limpar campos do formulário
                 setEmail('');
                 setPassword('');
-
-                window.location.href = '/dashboard';
             });
         } 
         catch (error) {
