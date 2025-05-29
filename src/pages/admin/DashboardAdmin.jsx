@@ -228,7 +228,7 @@ function DashboardAdmin() {
                 </div>
             </section>
             
-            <CreateServiceModal />
+            <CreateServiceModal onServiceCreated={fetchAdminAppointments}/>
             <UpdateServiceModal />
         </main>
     );
