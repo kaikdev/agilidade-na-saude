@@ -11,6 +11,7 @@ function DashboardAdmin() {
     const [appointments, setAppointments] = useState([]);
     const [dataLoading, setDataLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [selectedAppointment, setSelectedAppointment] = useState(null);
 
     const fetchAdminAppointments = async () => {
         setDataLoading(true);
@@ -109,6 +110,17 @@ function DashboardAdmin() {
         });
     };
 
+    const handleEditClick = (appointment) => {
+        setSelectedAppointment(appointment);
+
+        const modalElement = document.getElementById('modalUpdateService');
+
+        if (modalElement) {
+            const bootstrapModal = new window.bootstrap.Modal(modalElement);
+            bootstrapModal.show();
+        }
+    };
+
     useEffect(() => {
         if (!authLoading && isAuthenticated) {
             fetchAdminAppointments();
@@ -205,7 +217,7 @@ function DashboardAdmin() {
                                     </div>
 
                                     <div className="buttons-actions">
-                                        <button className="btn-edit" type="button" data-bs-toggle="modal" data-bs-target="#modalUpdateService">
+                                        <button className="btn-edit" type="button" onClick={() => handleEditClick(appointment)}>
                                             <i className="fa-solid fa-pen-to-square"></i>
                                             Editar
                                         </button>
@@ -229,7 +241,11 @@ function DashboardAdmin() {
             </section>
             
             <CreateServiceModal onServiceCreated={fetchAdminAppointments}/>
-            <UpdateServiceModal />
+            
+            <UpdateServiceModal 
+                selectedAppointment={selectedAppointment} 
+                onServiceUpdated={fetchAdminAppointments} 
+            />
         </main>
     );
 }
