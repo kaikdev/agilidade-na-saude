@@ -1,0 +1,18 @@
+#modalCreateService .item-input,
+#modalUpdateService .item-input {
+    flex-direction: column;
+}
+
+#modalCreateService .item-input label,
+#modalUpdateService .item-input label {
+    display: block;
+    width: 100%;
+    text-align: left;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+#modalCreateService .item-input input,
+#modalUpdateService .item-input input {
+    border-radius: 5px;
+}

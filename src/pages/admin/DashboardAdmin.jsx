@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import Swal from 'sweetalert2';
 import CreateServiceModal from './modals/CreateServiceModal';
+import UpdateServiceModal from './modals/UpdateServiceModal';
 import './DashboardAdmin.css';
 
 function DashboardAdmin() {
@@ -56,6 +57,56 @@ function DashboardAdmin() {
         finally {
             setDataLoading(false);
         }
+    };
+
+    const handleDeleteAppointment = async (appointmentId) => {
+        Swal.fire({
+            title: 'Tem certeza?',
+            text: "Você não poderá reverter isso!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sim, deletar!',
+            cancelButtonText: 'Cancelar'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const response = await axios.delete(`http://localhost:3001/api/admin/appointments/delete/${appointmentId}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
+
+                    Swal.fire(
+                        'Deletado!',
+                        response.data.message,
+                        'success'
+                    );
+                    
+                    fetchAdminAppointments(); 
+                } 
+                catch (err) {
+                    console.error('Erro ao deletar atendimento:', err);
+                    let errorMessage = 'Não foi possível deletar o atendimento.';
+                    if (err.response) {
+                        if (err.response.status === 401 || err.response.status === 403) {
+                            errorMessage = 'Acesso não autorizado. Sua sessão pode ter expirado.';
+                            logout(false, errorMessage);
+                        } else {
+                            errorMessage = err.response.data.error || err.response.data.message || errorMessage;
+                        }
+                    } else if (err.request) {
+                        errorMessage = 'Erro de rede: Servidor não responde.';
+                    }
+                    Swal.fire(
+                        'Erro!',
+                        errorMessage,
+                        'error'
+                    );
+                }
+            }
+        });
     };
 
     useEffect(() => {
@@ -154,12 +205,12 @@ function DashboardAdmin() {
                                     </div>
 
                                     <div className="buttons-actions">
-                                        <button className="btn-edit" type="button">
+                                        <button className="btn-edit" type="button" data-bs-toggle="modal" data-bs-target="#modalUpdateService">
                                             <i className="fa-solid fa-pen-to-square"></i>
                                             Editar
                                         </button>
 
-                                        <button className="btn-delete" type="button">
+                                        <button className="btn-delete" type="button" onClick={() => handleDeleteAppointment(appointment.id)}>
                                             <i className="fa-solid fa-trash-can"></i>
                                             Excluir
                                         </button>
@@ -176,8 +227,9 @@ function DashboardAdmin() {
                     </button>
                 </div>
             </section>
-
+            
             <CreateServiceModal />
+            <UpdateServiceModal />
         </main>
     );
 }
