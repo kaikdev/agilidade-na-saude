@@ -24,15 +24,11 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
 
-          {/* 
-          <Route path="/dashboard" element={
-            <PrivateRoute>
-              <DashboardPage />
-            </PrivateRoute>} 
-          />
-          */}
-
-          <Route path="/admin/dashboard" element={<DashboardAdmin />} />
+          <Route path="/admin/dashboard" element={
+            <PrivateRoute role="admin">
+              <DashboardAdmin />
+            </PrivateRoute>
+          } />
         </Routes>
 
         <Footer />

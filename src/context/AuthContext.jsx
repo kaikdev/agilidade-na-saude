@@ -1,7 +1,8 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 
 const AuthContext = createContext(null);
 
@@ -11,96 +12,126 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
-    const decodeAndSetUser = (currentToken) => {
+    const fetchUserProfile = useCallback(async (userId, userToken) => {
+        if (!userId || !userToken) {
+            return null;
+        }
+        try {
+            const response = await axios.get(`http://localhost:3001/api/users/${userId}`, {
+                headers: {
+                    Authorization: `Bearer ${userToken}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Erro na requisição do perfil:', error.response?.data || error.message);
+            return null;
+        }
+    }, []);
+
+    const decodeAndSetUser = useCallback(async (currentToken) => {
         if (currentToken) {
             try {
                 const decoded = jwtDecode(currentToken);
                 const currentTime = Date.now() / 1000;
 
                 if (decoded.exp < currentTime) {
-                    console.warn('Token JWT expirado.');
-
                     Swal.fire({ 
-                        icon: 'warning',
+                        icon: 'warning', 
                         title: 'Sessão Expirada', 
                         text: 'Sua sessão expirou. Faça login novamente.', 
-                        showConfirmButton: false, timer: 2000 
+                        showConfirmButton: false, 
+                        timer: 3000 
                     });
+                    return null;
+                }
 
-                    localStorage.removeItem('authToken');
-                    setToken(null);
+                const fullProfile = await fetchUserProfile(decoded.id, currentToken);
+
+                if (fullProfile) {
+                    const userWithRole = {
+                        ...fullProfile,
+                        role: decoded.role
+                    };
+                    setUser(userWithRole);
+                    return userWithRole;
+                } else {
                     setUser(null);
                     return null;
                 }
-                setUser(decoded);
-                return decoded;
-            } 
-            catch (error) {
-                console.error('Erro ao decodificar o token:', error);
 
-                Swal.fire({ 
-                    icon: 'error', 
-                    title: 'Token Inválido', 
-                    text: 'Token inválido. Faça login novamente.', 
-                    showConfirmButton: false, timer: 2000 
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Token Inválido',
+                    text: 'Token inválido. Faça login novamente.',
+                    showConfirmButton: false, timer: 3000
                 });
-
-                localStorage.removeItem('authToken');
-                setToken(null);
-                setUser(null);
                 return null;
             }
         }
-
         setUser(null);
         return null;
-    };
+    }, [fetchUserProfile]);
 
     useEffect(() => {
-        const storedToken = localStorage.getItem('authToken');
+        const initializeAuth = async () => {
+            const storedToken = localStorage.getItem('authToken');
 
-        if (storedToken) {
-            setToken(storedToken);
-            decodeAndSetUser(storedToken);
-        } 
-        else {
-            setToken(null);
-            setUser(null);
-        }
+            if (storedToken) {
+                const userProfile = await decodeAndSetUser(storedToken);
+                if (userProfile) {
+                    setToken(storedToken);
+                } else {
+                    localStorage.removeItem('authToken');
+                    setToken(null);
+                    setUser(null);
+                }
+            } else {
+                setToken(null);
+                setUser(null);
+            }
+            setLoading(false);
+        };
 
-        setLoading(false);
-    }, []);
+        initializeAuth();
+    }, [decodeAndSetUser]);
 
-    const handleLogin = (newToken) => {
+
+    const handleLogin = useCallback(async (newToken) => {
         localStorage.setItem('authToken', newToken);
         setToken(newToken);
 
-        const decodedUser = decodeAndSetUser(newToken);
+        const fullUser = await decodeAndSetUser(newToken);
 
-        if (decodedUser) {
-            if (decodedUser.role === 'admin') {
-                navigate('/dashboard');
-            } 
-            else {
-                navigate('/dashboard');
+        if (fullUser) {
+            if (fullUser.role === 'admin') {
+                navigate('/admin/dashboard', { replace: true });
+            } else {
+                navigate('/dashboard', { replace: true });
             }
+        } else {
+            localStorage.removeItem('authToken');
+            setToken(null);
+            setUser(null);
+            navigate('/', { replace: true });
         }
-    };
+    }, [decodeAndSetUser, navigate]);
 
-    const handleLogout = (confirm = true, message = 'Você foi desconectado com sucesso.') => {
+    const handleLogout = useCallback((confirm = true, message = 'Você foi desconectado com sucesso.') => {
         const performLogout = () => {
             localStorage.removeItem('authToken');
             setToken(null);
             setUser(null);
+
+            navigate('/', { replace: true });
 
             Swal.fire({
                 icon: 'success',
                 title: 'Deslogado!',
                 text: message,
                 showConfirmButton: false,
-                timer: 1500
-            }).then(() => {
-                navigate('/');
+                timer: 2000
             });
         };
 
@@ -118,11 +149,10 @@ export const AuthProvider = ({ children }) => {
                     performLogout();
                 }
             });
-        } 
-        else {
+        } else {
             performLogout();
         }
-    };
+    }, [navigate]);
 
     const authContextValue = {
         token,

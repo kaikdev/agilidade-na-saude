@@ -41,7 +41,7 @@ h3.section-title i {
 }
 
 .services-list {
-    display: none;
+    display: flex;
     flex-wrap: wrap;
     gap: 1rem;
 }
