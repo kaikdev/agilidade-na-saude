@@ -62,3 +62,12 @@ div.swal2-html-container {
 div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-confirm) {
     background-color: #0074e5 !important;
 }
+
+main.main-dashboard {
+    padding: 1rem;
+    background-color: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-height: calc(100vh - 70px);
+}
