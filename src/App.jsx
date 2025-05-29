@@ -8,6 +8,7 @@ import LoginModal from './components/modals/LoginModal';
 import RegisterModal from './components/modals/RegisterModal';
 import RecoverPasswordModal from './components/modals/RecoverPasswordModal';
 import DashboardAdmin from './pages/admin/DashboardAdmin';
+import DashboardUser from './pages/user/DashboardUser';
 
 import './App.css'
 
@@ -27,6 +28,12 @@ function App() {
           <Route path="/admin/dashboard" element={
             <PrivateRoute role="admin">
               <DashboardAdmin />
+            </PrivateRoute>
+          } />
+
+          <Route path="/dashboard" element={
+            <PrivateRoute role="user">
+              <DashboardUser />
             </PrivateRoute>
           } />
         </Routes>

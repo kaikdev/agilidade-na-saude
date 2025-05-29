@@ -7,7 +7,9 @@ import { useAuth } from '../context/AuthContext';
 function Header() {
     const [menuActive, setMenuActive] = useState(false);
     const timeoutRef = useRef(null);
-    const { isAuthenticated, logout } = useAuth();
+    const { isAuthenticated, logout, user } = useAuth();
+
+    const dashboardPath = user?.role === 'admin' ? '/admin/dashboard' : '/dashboard';
 
     function toggleMenu() {
         if (timeoutRef.current) {
@@ -53,7 +55,7 @@ function Header() {
                     {isAuthenticated ? (
                         <>
                             <li>
-                                <Link to="/dashboard" onClick={() => setMenuActive(false)}>
+                                <Link to={dashboardPath} onClick={() => setMenuActive(false)}>
                                     <i className="fa-regular fa-id-card"></i>
                                     Dashboard
                                 </Link>
