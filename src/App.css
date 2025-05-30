@@ -63,6 +63,10 @@ div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-confirm) {
     background-color: #0074e5 !important;
 }
 
+.btn-close {
+    box-shadow: none !important;
+}
+
 main.main-dashboard {
     padding: 1rem;
     background-color: #f8f9fa;

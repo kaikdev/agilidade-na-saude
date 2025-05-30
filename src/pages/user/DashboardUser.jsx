@@ -1,30 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import { useAuth } from '../../context/AuthContext'; // Importe useAuth
-import Swal from 'sweetalert2'; // Para feedback
-import ServiceRegistrationModal from './modals/ServiceRegistrationModal'; // Seu modal de inscrição
+import { useAuth } from '../../context/AuthContext';
+import Swal from 'sweetalert2';
+import ServiceRegistrationModal from './modals/ServiceRegistrationModal'; 
 import './DashboardUser.css';
 
 function DashboardUser() {
-    const { user, token, isAuthenticated, loading: authLoading, logout } = useAuth(); // Pegue o user e o token
-    const [availableAppointments, setAvailableAppointments] = useState([]); // Para armazenar os atendimentos disponíveis
-    const [priorities, setPriorities] = useState([]); // Para as prioridades
-    const [dataLoading, setDataLoading] = useState(true); // Para carregamento dos dados da página
+    const { user, token, isAuthenticated, loading: authLoading, logout } = useAuth(); 
+    const [availableAppointments, setAvailableAppointments] = useState([]); 
+    const [priorities, setPriorities] = useState([]); 
+    const [dataLoading, setDataLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [selectedService, setSelectedService] = useState(null); // Para o serviço a ser inscrito no modal
+    const [selectedService, setSelectedService] = useState(null); 
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
-    // Função para buscar os atendimentos disponíveis para o usuário
     const fetchAvailableAppointments = async () => {
         setDataLoading(true);
         setError(null);
         try {
-            // Verificações pré-requisição para segurança e evitar chamadas desnecessárias
             if (!isAuthenticated || !token || !user?.id) {
                 logout(false, 'Sua sessão é inválida ou expirou. Por favor, faça login novamente.');
                 return;
             }
 
-            const response = await axios.get('http://localhost:3000/api/users/appointments/list', {
+            const response = await axios.get('http://localhost:3000/api/users/appointments/list', { // <-- Porta 3000
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -33,10 +32,11 @@ function DashboardUser() {
             if (Array.isArray(response.data.appointments)) {
                 setAvailableAppointments(response.data.appointments);
             } else {
-                setAvailableAppointments([]); // Garante que é um array
+                setAvailableAppointments([]);
             }
+            
             if (Array.isArray(response.data.priorites)) {
-                setPriorities(response.data.priorites); // Armazena as prioridades
+                setPriorities(response.data.priorites);
             } else {
                 setPriorities([]);
             }
@@ -48,12 +48,15 @@ function DashboardUser() {
                     errorMessage = 'Acesso não autorizado. Sua sessão pode ter expirado ou você não tem permissão.';
                     logout(false, errorMessage);
                     return;
-                } else {
+                } 
+                else {
                     errorMessage = err.response.data.error || err.response.data.message || errorMessage;
                 }
-            } else if (err.request) {
+            } 
+            else if (err.request) {
                 errorMessage = 'Não foi possível conectar ao servidor. Verifique sua conexão ou tente novamente mais tarde.';
             }
+
             setError(errorMessage);
             Swal.fire({
                 icon: 'error',
@@ -61,29 +64,35 @@ function DashboardUser() {
                 text: errorMessage,
                 confirmButtonText: 'Ok'
             });
-        } finally {
+        } 
+        finally {
             setDataLoading(false);
         }
     };
 
-    // Função para abrir o modal de inscrição
     const handleParticiparClick = (service) => {
-        setSelectedService(service); // Define qual serviço será usado no modal de inscrição
-        const modalElement = document.getElementById('modalServiceRegistration');
-        if (modalElement) {
-            const bootstrapModal = new window.bootstrap.Modal(modalElement);
-            bootstrapModal.show();
-        }
+        setSelectedService(service); 
+        setIsModalOpen(true); 
     };
 
-    // useEffect para carregar os atendimentos disponíveis
+    const handleCloseModal = useCallback(() => { 
+        setIsModalOpen(false); 
+    }, []); 
+
+    const onModalHiddenFromChild = useCallback(() => { 
+        setSelectedService(null);
+    }, []);
+
+    const handleServiceRegistered = () => {
+        fetchAvailableAppointments(); 
+    };
+
     useEffect(() => {
         if (!authLoading && isAuthenticated) {
             fetchAvailableAppointments();
         }
-    }, [authLoading, isAuthenticated, token, user?.id, logout]); // Dependências do useEffect
+    }, [authLoading, isAuthenticated, token, user?.id, logout]);
 
-    // Lógica de Renderização Condicional (Carregamento, Erro, Vazio, Lista)
     if (authLoading) {
         return (
             <main className="main-dashboard">
@@ -121,7 +130,6 @@ function DashboardUser() {
     return (
         <main className="main-dashboard">
             <div className="title-user">
-                {/* Exibe o nome do usuário logado */}
                 <h3>Olá, {user?.name || 'Usuário'}!</h3>
                 <p>Seja bem-vindo ao seu Dashboard.</p>
             </div>
@@ -133,7 +141,6 @@ function DashboardUser() {
                 </h3>
 
                 {availableAppointments.length === 0 ? (
-                    // Se não houver atendimentos, exibe a mensagem de vazio
                     <div className="service-empty">
                         <p>
                             <i className="fa-solid fa-circle-exclamation"></i>
@@ -141,7 +148,6 @@ function DashboardUser() {
                         </p>
                     </div>
                 ) : (
-                    // Se houver atendimentos, renderiza a lista
                     <div className="services-list">
                         {availableAppointments.map((service) => (
                             <div className="item-service" key={service.id}>
@@ -176,12 +182,9 @@ function DashboardUser() {
                                     </div>
 
                                     <div className="buttons-actions">
-                                        <button
-                                            className="create-service"
-                                            type="button"
-                                            // Conecte o botão ao evento de abrir o modal
-                                            onClick={() => handleParticiparClick(service)}
-                                            disabled={service.qtd_attendance <= 0} // Desabilita se não houver senhas
+                                        <button className="create-service" type="button"
+                                            onClick={() => handleParticiparClick(service)} 
+                                            disabled={service.qtd_attendance <= 0} 
                                         >
                                             <i className="fa-solid fa-user-plus"></i>
                                             Participar
@@ -199,11 +202,13 @@ function DashboardUser() {
                 )}
             </section>
 
-            {/* Passe o serviço selecionado e as prioridades para o modal */}
-            <ServiceRegistrationModal
-                selectedService={selectedService}
-                priorities={priorities}
-                onServiceRegistered={fetchAvailableAppointments} // Função para recarregar a lista após a inscrição
+            <ServiceRegistrationModal 
+                isOpen={isModalOpen} 
+                onClose={handleCloseModal} 
+                onHidden={onModalHiddenFromChild}
+                selectedService={selectedService} 
+                priorities={priorities} 
+                onServiceRegistered={handleServiceRegistered} 
             />
         </main>
     );
