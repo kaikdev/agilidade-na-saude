@@ -14,11 +14,11 @@ export const AuthProvider = ({ children }) => {
 
     const fetchUserProfile = useCallback(async (userId, userToken, userRole) => {
         if (!userId || !userToken || !userRole) {
-            console.warn('fetchUserProfile chamado sem userId, userToken ou userRole.');
             return null;
         }
 
         let apiUrl = '';
+        
         if (userRole === 'admin') {
             apiUrl = `http://localhost:3000/api/admin/${userId}`;
         } 
@@ -29,8 +29,6 @@ export const AuthProvider = ({ children }) => {
             console.error('Role de usuário desconhecido ao buscar perfil:', userRole);
             return null;
         }
-
-        console.log(`Buscando perfil para ${userRole} na URL: ${apiUrl}`);
 
         try {
             const response = await axios.get(apiUrl, {
