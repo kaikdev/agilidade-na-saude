@@ -12,82 +12,114 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
-    const fetchUserProfile = useCallback(async (userId, userToken) => {
-        if (!userId || !userToken) {
+    const fetchUserProfile = useCallback(async (userId, userToken, userRole) => {
+        if (!userId || !userToken || !userRole) {
+            console.warn('fetchUserProfile chamado sem userId, userToken ou userRole.');
             return null;
         }
+
+        let apiUrl = '';
+        if (userRole === 'admin') {
+            apiUrl = `http://localhost:3000/api/admin/${userId}`;
+        } 
+        else if (userRole === 'user') {
+            apiUrl = `http://localhost:3000/api/users/${userId}`;
+        } 
+        else {
+            console.error('Role de usuário desconhecido ao buscar perfil:', userRole);
+            return null;
+        }
+
+        console.log(`Buscando perfil para ${userRole} na URL: ${apiUrl}`);
+
         try {
-            const response = await axios.get(`http://localhost:3000/api/users/${userId}`, {
+            const response = await axios.get(apiUrl, {
                 headers: {
                     Authorization: `Bearer ${userToken}`
                 }
             });
+
             return response.data;
-        } catch (error) {
-            console.error('Erro na requisição do perfil:', error.response?.data || error.message);
+        } 
+        catch (error) {
+            console.error(`Erro na requisição do perfil para ${userRole} (${apiUrl}):`, error.response?.data || error.message);
+
             return null;
         }
     }, []);
 
     const decodeAndSetUser = useCallback(async (currentToken) => {
-        if (currentToken) {
-            try {
-                const decoded = jwtDecode(currentToken);
-                const currentTime = Date.now() / 1000;
+        if (!currentToken) {
+            setUser(null);
+            return null;
+        }
 
-                if (decoded.exp < currentTime) {
-                    Swal.fire({ 
-                        icon: 'warning', 
-                        title: 'Sessão Expirada', 
-                        text: 'Sua sessão expirou. Faça login novamente.', 
-                        showConfirmButton: false, 
-                        timer: 3000 
-                    });
-                    return null;
-                }
+        try {
+            const decoded = jwtDecode(currentToken);
+            const currentTime = Date.now() / 1000;
 
-                const fullProfile = await fetchUserProfile(decoded.id, currentToken);
-
-                if (fullProfile) {
-                    const userWithRole = {
-                        ...fullProfile,
-                        role: decoded.role
-                    };
-                    setUser(userWithRole);
-                    return userWithRole;
-                } else {
-                    setUser(null);
-                    return null;
-                }
-
-            } catch (error) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Token Inválido',
-                    text: 'Token inválido. Faça login novamente.',
-                    showConfirmButton: false, timer: 3000
+            if (decoded.exp < currentTime) {
+                Swal.fire({ 
+                    icon: 'warning', 
+                    title: 'Sessão Expirada', 
+                    text: 'Sua sessão expirou. Faça login novamente.', 
+                    showConfirmButton: false, 
+                    timer: 3000 
                 });
+                setUser(null);
                 return null;
             }
+
+            const fullProfileData = await fetchUserProfile(decoded.id, currentToken, decoded.role);
+
+            if (fullProfileData) {
+                const userToSet = {
+                    ...fullProfileData,
+                    id: decoded.id,
+                    role: decoded.role
+                };
+                setUser(userToSet);
+                return userToSet;
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Falha ao Carregar Perfil',
+                    text: 'Não foi possível carregar os detalhes do seu perfil. Tente fazer login novamente.',
+                    showConfirmButton: false, timer: 3500
+                });
+                setUser(null);
+                return null;
+            }
+
+        } catch (error) {
+            console.error("Erro ao decodificar token ou erro inesperado:", error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Token Inválido ou Erro',
+                text: 'Ocorreu um problema com sua sessão. Faça login novamente.',
+                showConfirmButton: false, timer: 3000
+            });
+            setUser(null);
+            return null;
         }
-        setUser(null);
-        return null;
     }, [fetchUserProfile]);
 
     useEffect(() => {
         const initializeAuth = async () => {
+            setLoading(true);
             const storedToken = localStorage.getItem('authToken');
 
             if (storedToken) {
                 const userProfile = await decodeAndSetUser(storedToken);
                 if (userProfile) {
                     setToken(storedToken);
-                } else {
+                } 
+                else {
                     localStorage.removeItem('authToken');
                     setToken(null);
-                    setUser(null);
                 }
-            } else {
+            } 
+            else {
                 setToken(null);
                 setUser(null);
             }
@@ -99,6 +131,7 @@ export const AuthProvider = ({ children }) => {
 
 
     const handleLogin = useCallback(async (newToken) => {
+        setLoading(true);
         localStorage.setItem('authToken', newToken);
         setToken(newToken);
 
@@ -107,15 +140,22 @@ export const AuthProvider = ({ children }) => {
         if (fullUser) {
             if (fullUser.role === 'admin') {
                 navigate('/admin/dashboard', { replace: true });
-            } else {
+            } 
+            else if (fullUser.role === 'user') {
                 navigate('/dashboard', { replace: true });
+            } 
+            else {
+                console.warn("Role desconhecido após login, redirecionando para home:", fullUser.role);
+                navigate('/', { replace: true });
             }
-        } else {
+        } 
+        else {
             localStorage.removeItem('authToken');
             setToken(null);
-            setUser(null);
+
             navigate('/', { replace: true });
         }
+        setLoading(false);
     }, [decodeAndSetUser, navigate]);
 
     const handleLogout = useCallback((confirm = true, message = 'Você foi desconectado com sucesso.') => {
@@ -123,6 +163,7 @@ export const AuthProvider = ({ children }) => {
             localStorage.removeItem('authToken');
             setToken(null);
             setUser(null);
+            setLoading(false);
 
             navigate('/', { replace: true });
 
