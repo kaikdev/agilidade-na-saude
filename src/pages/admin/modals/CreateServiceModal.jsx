@@ -35,7 +35,7 @@ function CreateServiceModal({ onServiceCreated }) {
                 service_date: formatInputDateForAPI(serviceDate),
             };
 
-            const response = await axios.post('http://localhost:3001/api/admin/appointments', payload, {
+            const response = await axios.post('http://localhost:3000/api/admin/appointments', payload, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

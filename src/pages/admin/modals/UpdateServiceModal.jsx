@@ -60,7 +60,7 @@ function UpdateServiceModal({ selectedAppointment, onServiceUpdated }) {
                 service_date: formatInputDateForAPI(serviceDate),
             };
 
-            const response = await axios.put(`http://localhost:3001/api/admin/appointments/update/${selectedAppointment.id}`, payload, {
+            const response = await axios.put(`http://localhost:3000/api/admin/appointments/update/${selectedAppointment.id}`, payload, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

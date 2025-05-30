@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
             return null;
         }
         try {
-            const response = await axios.get(`http://localhost:3001/api/users/${userId}`, {
+            const response = await axios.get(`http://localhost:3000/api/users/${userId}`, {
                 headers: {
                     Authorization: `Bearer ${userToken}`
                 }

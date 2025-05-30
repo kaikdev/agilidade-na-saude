@@ -10,7 +10,7 @@ function ServiceRegistrationModal() {
                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
 
                         <h6 className="modal-title" id="modalServiceRegistrationLabel">
-                            Gerar Senha de Atendimento
+                            Participar do Atendimento
                         </h6>
 
                         <form>

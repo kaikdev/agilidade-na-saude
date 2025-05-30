@@ -22,7 +22,7 @@ function DashboardAdmin() {
                 return;
             }
 
-            const response = await axios.get('http://localhost:3001/api/admin/appointments/listAll', {
+            const response = await axios.get('http://localhost:3000/api/admin/appointments/listAll', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -73,7 +73,7 @@ function DashboardAdmin() {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const response = await axios.delete(`http://localhost:3001/api/admin/appointments/delete/${appointmentId}`, {
+                    const response = await axios.delete(`http://localhost:3000/api/admin/appointments/delete/${appointmentId}`, {
                         headers: {
                             Authorization: `Bearer ${token}`
                         }

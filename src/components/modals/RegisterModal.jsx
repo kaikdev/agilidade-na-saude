@@ -54,7 +54,7 @@ function RegisterModal() {
         let apiUrl = '';
 
         if (selectedRole === 'user') { // Cadastro de Paciente
-            apiUrl = 'http://localhost:3001/api/users';
+            apiUrl = 'http://localhost:3000/api/users';
             payload = {
                 ...payload,
                 birth_date: formatBirthDateForAPI(cadastroData),
@@ -71,7 +71,7 @@ function RegisterModal() {
             }
         } 
         else if (selectedRole === 'admin') { // Cadastro de Médico (Admin)
-            apiUrl = 'http://localhost:3001/api/admin';
+            apiUrl = 'http://localhost:3000/api/admin';
             payload = {
                 ...payload,
                 crm,
