@@ -1,0 +1,13 @@
+.service-empty p {
+    margin-bottom: 0;
+}
+
+.item-service .buttons-actions {
+    flex-wrap: wrap;
+}
+
+.item-service .buttons-actions button {
+    white-space: nowrap;
+    flex: 1 1 165px;
+    padding: 5px 10px;
+}
