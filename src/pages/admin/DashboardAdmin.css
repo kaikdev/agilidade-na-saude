@@ -46,12 +46,9 @@ h3.section-title i {
     grid-gap: 1rem;
 }
 
-.services-list .item-service {
-    flex:  1 1 300px;
-}
-
 .item-service .body-service {
-    background-color: #f8f9fa;
+    background-color: #0074e52b;
+    border: 1px solid #0d6efd45;
     padding: 1rem;
     border-radius: 5px;
     box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;

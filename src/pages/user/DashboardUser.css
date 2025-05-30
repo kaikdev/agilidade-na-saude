@@ -11,3 +11,28 @@
     flex: 1 1 165px;
     padding: 5px 10px;
 }
+
+.item-service.scheduled-item .body-service {
+    background-color: #0074e52b;
+    border: 1px solid #0d6efd45;
+    height: 100%;
+}
+
+.item-service.appointments-list .body-service {
+    background-color: #d4fbe1e8;
+    border: 1px solid #008e143b;
+    
+}
+
+.desc-service p strong {
+    margin-right: 5px;
+}
+
+.desc-service p .badge {
+    background-color: #0074e5;
+    margin: 0px;
+    padding: 10px 15px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 5px;
+}
