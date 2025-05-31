@@ -4,91 +4,68 @@ import Swal from 'sweetalert2';
 import { useAuth } from '../../../context/AuthContext';
 import './ServiceRegistrationModal.css';
 
-function ServiceRegistrationModal({ isOpen, onClose, onHidden, selectedService, priorities, onServiceRegistered }) {
+function ServiceRegistrationModal({ selectedService, priorities, onServiceRegistered, onModalActuallyClosed }) {
     const [selectedPriorityId, setSelectedPriorityId] = useState('');
     const [loading, setLoading] = useState(false);
     const { token } = useAuth();
-
     const modalRef = useRef(null);
-    const bsModalRef = useRef(null);
+    const wasRegistrationSuccessfulRef = useRef(false);
 
     useEffect(() => {
         const modalElement = modalRef.current;
         if (!modalElement) return;
 
-        if (!bsModalRef.current) {
-            bsModalRef.current = new window.bootstrap.Modal(modalElement);
-        }
-
-        const handleBootstrapHide = () => {
-            if (onClose) {
-                onClose();
-            }
-        };
-
-        const handleBootstrapModalHidden = () => {
-            if (onHidden) {
-                onHidden();
-            }
+        const handleModalCompletelyHidden = () => {
             setSelectedPriorityId('');
+            if (onModalActuallyClosed) {
+                onModalActuallyClosed();
+            }
+
+            if (wasRegistrationSuccessfulRef.current && onServiceRegistered) {
+                onServiceRegistered();
+                wasRegistrationSuccessfulRef.current = false;
+            }
         };
 
-        modalElement.addEventListener('hide.bs.modal', handleBootstrapHide);
-        modalElement.addEventListener('hidden.bs.modal', handleBootstrapModalHidden);
-
+        modalElement.addEventListener('hidden.bs.modal', handleModalCompletelyHidden);
         return () => {
-            modalElement.removeEventListener('hide.bs.modal', handleBootstrapHide);
-            modalElement.removeEventListener('hidden.bs.modal', handleBootstrapModalHidden);
+            modalElement.removeEventListener('hidden.bs.modal', handleModalCompletelyHidden);
         };
-    }, [onClose, onHidden]);
+    }, [onModalActuallyClosed, onServiceRegistered]);
 
     useEffect(() => {
-        if (bsModalRef.current) {
-            if (isOpen) {
-                bsModalRef.current.show();
-            }
-            else {
-                bsModalRef.current.hide();
-            }
+        if (selectedService) {
+            setSelectedPriorityId('');
+            wasRegistrationSuccessfulRef.current = false;
         }
-    }, [isOpen]);
+    }, [selectedService]);
 
     const handlePriorityChange = (e) => {
         setSelectedPriorityId(e.target.value);
     };
 
-    const handleCloseButtonClick = () => {
-        if (onClose) {
-            onClose();
-        }
-    };
-
     const handleRegisterService = async (e) => {
         e.preventDefault();
         setLoading(true);
+        wasRegistrationSuccessfulRef.current = false;
 
         if (!selectedService || !selectedService.id) {
             Swal.fire({
-                icon: 'error',
-                title: 'Erro!',
+                icon: 'error', title: 'Erro!',
                 text: 'Nenhum atendimento selecionado para inscrição.',
                 confirmButtonText: 'Ok'
-            }).then(() => {
-                setLoading(false);
-            });
+            }).then(() => setLoading(false));
             return;
         }
 
         let priorityToSend = { nome: "Comum", nivel: 99 };
-
         if (selectedPriorityId) {
             const chosenPriority = priorities.find(p => p.id === parseInt(selectedPriorityId));
-
             if (chosenPriority) {
                 priorityToSend = { nome: chosenPriority.nome, nivel: chosenPriority.nivel };
             }
         }
-        
+
         try {
             const payload = {
                 priority: priorityToSend.nome,
@@ -99,49 +76,51 @@ function ServiceRegistrationModal({ isOpen, onClose, onHidden, selectedService, 
                 headers: { Authorization: `Bearer ${token}` }
             });
 
-            const apiResponseData = response.data.data; 
+            const apiResponseData = response.data.data;
 
             if (apiResponseData && apiResponseData.success) {
-                if (onServiceRegistered) {
-                    onServiceRegistered();
-                }
-                
-                if (onClose) {
-                    onClose(); 
-                }
+                wasRegistrationSuccessfulRef.current = true;
 
                 Swal.fire({
                     icon: 'success',
                     title: 'Inscrição Confirmada!',
                     html: `Seu agendamento para <strong>${selectedService.specialty}</strong> foi realizado.<br>Sua senha é: <strong>${apiResponseData.password}</strong><br>Prioridade: <strong>${apiResponseData.priority}</strong>`,
-                    confirmButtonText: 'Ok'
+                    confirmButtonText: 'Ok',
+                    didClose: () => {
+                        const modalElement = modalRef.current;
+                        if (modalElement) {
+                            const bootstrapModalInstance = window.bootstrap.Modal.getInstance(modalElement);
+                            if (bootstrapModalInstance) {
+                                bootstrapModalInstance.hide();
+                            }
+                        }
+                    }
                 });
-
-            } else {
+            } 
+            else {
                 const message = apiResponseData?.message || response.data?.message || 'Erro desconhecido ao processar a inscrição.';
-
                 throw new Error(message);
             }
-        } catch (error) {
+        } 
+        catch (error) {
             console.error('Erro ao participar do atendimento:', error);
-            
+
             let errorMessage = 'Ocorreu um erro ao participar do atendimento.';
 
             if (error.response) {
-                errorMessage = error.response.data.error || error.response.data.message || `Erro ${error.response.status}: Não foi possível processar a solicitação.`;
+                errorMessage = error.response.data.error || error.response.data.message || `Erro ${error.response.status}`;
             } 
             else if (error.request) {
-                errorMessage = 'Erro de rede: Não foi possível conectar ao servidor. Verifique sua conexão.';
+                errorMessage = 'Erro de rede. Tente novamente.';
             } 
             else if (error.message) {
                 errorMessage = error.message;
             }
-            
             Swal.fire({
                 icon: 'error',
-                title: 'Erro na Inscrição!',
+                title: 'Erro na Inscrição',
                 text: errorMessage,
-                confirmButtonText: 'Tentar Novamente'
+                confirmButtonText: 'Ok'
             });
         } 
         finally {
@@ -154,12 +133,11 @@ function ServiceRegistrationModal({ isOpen, onClose, onHidden, selectedService, 
             <div className="modal-dialog modal-login modal-dialog-centered">
                 <div className="modal-content">
                     <div className="modal-body">
-                        <button  type="button" className="btn-close" aria-label="Fechar" onClick={handleCloseButtonClick}></button>
+                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
 
-                        <h6 className="modal-title" id="modalServiceRegistrationLabel">
-                            Participar do Atendimento
-                        </h6>
-                        {selectedService && (
+                        <h6 className="modal-title" id="modalServiceRegistrationLabel">Participar do Atendimento</h6>
+
+                        {selectedService ? (
                             <>
                                 <div className="item-input mb-3">
                                     <label>Você está se inscrevendo para:</label>
@@ -180,32 +158,35 @@ function ServiceRegistrationModal({ isOpen, onClose, onHidden, selectedService, 
                                     <label>Senhas Disponíveis</label>
                                     <input type="text" className="form-control" value={selectedService.qtd_attendance} readOnly />
                                 </div>
+
+                                <form onSubmit={handleRegisterService}>
+                                    <div className="item-input mb-3">
+                                        <label htmlFor="prioritySelect">Selecionar Prioridade (opcional)</label>
+                                        <select
+                                            className="form-select"
+                                            id="prioritySelect"
+                                            value={selectedPriorityId}
+                                            onChange={handlePriorityChange}
+                                            disabled={!selectedService}
+                                        >
+                                            <option value="">Nenhuma prioridade (senha comum)</option>
+
+                                            {priorities.map(p => (
+                                                <option key={p.id} value={p.id}>
+                                                    {p.nome} (Nível: {p.nivel})
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    
+                                    <button className="btn-default" type="submit" disabled={loading || !selectedService}>
+                                        {loading ? 'Gerando Senha...' : 'Gerar Senha'}
+                                    </button>
+                                </form>
                             </>
+                        ) : (
+                            <p>Selecione um atendimento para participar.</p>
                         )}
-
-                        <form onSubmit={handleRegisterService}>
-                            <div className="item-input mb-3">
-                                <label htmlFor="prioritySelect">Selecionar Prioridade (opcional)</label>
-
-                                <select
-                                    className="form-select"
-                                    id="prioritySelect"
-                                    value={selectedPriorityId}
-                                    onChange={handlePriorityChange}
-                                >
-                                    <option value="">Nenhuma prioridade (senha comum)</option>
-                                    {priorities.map(p => (
-                                        <option key={p.id} value={p.id}>
-                                            {p.nome} (Nível: {p.nivel})
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            <button className="btn-default" type="submit" disabled={loading}>
-                                {loading ? 'Gerando Senha...' : 'Gerar Senha'}
-                            </button>
-                        </form>
                     </div>
                 </div>
             </div>

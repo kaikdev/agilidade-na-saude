@@ -12,9 +12,7 @@ function DashboardUser() {
     const [priorities, setPriorities] = useState([]);
     const [dataLoading, setDataLoading] = useState(true);
     const [error, setError] = useState(null);
-
     const [selectedService, setSelectedService] = useState(null);
-    const [isServiceModalOpen, setIsServiceModalOpen] = useState(false);
 
     const [userScheduledAppointments, setUserScheduledAppointments] = useState([]);
     const [isLoadingScheduled, setIsLoadingScheduled] = useState(true);
@@ -36,16 +34,20 @@ function DashboardUser() {
             if (response.data && Array.isArray(response.data.appointments)) {
                 setUserScheduledAppointments(response.data.appointments);
             }
-        } catch (err) {
+        } 
+        catch (err) {
             console.error("Erro ao buscar Meus Agendamentos:", err);
             let errorMessage = 'Ocorreu um erro ao carregar seus agendamentos.';
+
             if (err.response) {
                 errorMessage = err.response.data.error || err.response.data.message || `Erro ${err.response.status}`;
-            } else if (err.request) {
+            } 
+            else if (err.request) {
                 errorMessage = 'Não foi possível conectar ao servidor (Meus Agendamentos).';
             }
             setScheduledError(errorMessage);
-        } finally {
+        } 
+        finally {
             setIsLoadingScheduled(false);
         }
     }, [isAuthenticated, token]);
@@ -55,12 +57,13 @@ function DashboardUser() {
         setError(null);
         setAvailableAppointments([]);
         setPriorities([]);
+
         try {
             if (!isAuthenticated || !token || !user?.id) {
                 setDataLoading(false);
-
                 return;
             }
+
             const response = await axios.get('http://localhost:3000/api/users/appointments/list', {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -72,26 +75,37 @@ function DashboardUser() {
             if (Array.isArray(response.data.priorites)) {
                 setPriorities(response.data.priorites);
             }
-        } catch (err) {
+        } 
+        catch (err) {
             console.error("Erro ao buscar Atendimentos Disponíveis:", err);
             let errorMessage = 'Ocorreu um erro ao carregar os atendimentos disponíveis.';
+
             if (err.response) {
                 if (err.response.status === 401 || err.response.status === 403) {
                     errorMessage = 'Acesso não autorizado. Sua sessão pode ter expirado.';
+                    logout(false, errorMessage);
+                    return;
                 } 
                 else {
                     errorMessage = err.response.data.error || err.response.data.message || `Erro ${err.response.status}`;
                 }
-            } else if (err.request) {
+            } 
+            else if (err.request) {
                 errorMessage = 'Não foi possível conectar ao servidor (Atend. Disponíveis).';
             }
 
             setError(errorMessage);
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro ao Carregar!',
+                text: errorMessage,
+                confirmButtonText: 'Ok'
+            });
         } 
         finally {
             setDataLoading(false);
         }
-    }, [isAuthenticated, token, user?.id]);
+    }, [isAuthenticated, token, user?.id, logout]);
 
     useEffect(() => {
         if (!authLoading && isAuthenticated) {
@@ -99,29 +113,30 @@ function DashboardUser() {
             fetchUserScheduledAppointments();
         } 
         else if (!authLoading && !isAuthenticated) {
-            setAvailableAppointments([]);
-            setPriorities([]);
-            setUserScheduledAppointments([]);
-            setDataLoading(false);
-            setIsLoadingScheduled(false);
-            setError(null);
-            setScheduledError(null);
+            setAvailableAppointments([]); setPriorities([]); setUserScheduledAppointments([]);
+            setDataLoading(false); setIsLoadingScheduled(false); setError(null); setScheduledError(null);
             setSelectedService(null);
-            setIsServiceModalOpen(false);
         }
     }, [authLoading, isAuthenticated, fetchAvailableAppointments, fetchUserScheduledAppointments]);
 
-
     const handleParticiparClick = (service) => {
         setSelectedService(service);
-        setIsServiceModalOpen(true);
+
+        const modalElement = document.getElementById('modalServiceRegistration');
+
+        if (modalElement) {
+            const existingInstance = window.bootstrap.Modal.getInstance(modalElement);
+
+            if (existingInstance) {
+                existingInstance.dispose();
+            }
+
+            const serviceModalInstance = new window.bootstrap.Modal(modalElement);
+            serviceModalInstance.show();
+        }
     };
 
-    const handleCloseServiceModal = useCallback(() => {
-        setIsServiceModalOpen(false);
-    }, []);
-
-    const onServiceModalHidden = useCallback(() => {
+    const handleServiceModalActuallyClosed = useCallback(() => {
         setSelectedService(null);
     }, []);
 
@@ -131,34 +146,24 @@ function DashboardUser() {
     };
 
     if (authLoading) {
-        return (
-            <main className="main-dashboard">
-                <div className="title-user">
-                    <h3>Verificando sua sessão...</h3>
-                    <p>Aguarde enquanto autenticamos.</p>
-                </div>
-            </main>
-        );
+        return (<main className="main-dashboard"><div className="title-user"><h3>Verificando sua sessão...</h3><p>Aguarde...</p></div></main>);
     }
 
-    if (dataLoading) {
-        return (
-            <main className="main-dashboard">
-                <div className="title-user">
-                    <h3>Carregando atendimentos disponíveis...</h3>
-                    <p>Por favor, aguarde.</p>
-                </div>
-            </main>
-        );
+    const showGeneralLoading = (dataLoading && availableAppointments.length === 0 && !error) || (isLoadingScheduled && userScheduledAppointments.length === 0 && !scheduledError);
+
+    if (showGeneralLoading && !authLoading) {
+        return (<main className="main-dashboard"><div className="title-user"><h3>Carregando dados do dashboard...</h3><p>Por favor, aguarde.</p></div></main>);
     }
 
-    if (error) {
+    if (error && availableAppointments.length === 0 && !dataLoading && scheduledError && userScheduledAppointments.length === 0 && !isLoadingScheduled && !authLoading) {
         return (
             <main className="main-dashboard">
                 <div className="title-user">
                     <h3 style={{ color: 'red' }}>Erro ao carregar o Dashboard</h3>
-                    <p>{error}</p>
-                    <button className="btn btn-primary mt-3" onClick={fetchAvailableAppointments}>Tentar Novamente</button>
+                    
+                    <p>{error || scheduledError}</p>
+                    
+                    <button className="btn btn-primary mt-3" onClick={() => { fetchAvailableAppointments(); fetchUserScheduledAppointments(); }}>Tentar Novamente</button>
                 </div>
             </main>
         );
@@ -171,25 +176,24 @@ function DashboardUser() {
                 <p>Seja bem-vindo ao seu Dashboard.</p>
             </div>
 
+            {/* Meus Agendamentos */}
             <section className="create-service">
                 <h3 className="section-title">
-                    <i className="fa-solid fa-user-clock"></i>
+                    <i className="fa-solid fa-calendar-check"></i> 
                     Meus Agendamentos
                 </h3>
 
-                {isLoadingScheduled ? (
+                {isLoadingScheduled && userScheduledAppointments.length === 0 ? (
                     <p>Carregando seus agendamentos...</p>
                 ) : scheduledError ? (
                     <div className="alert alert-warning">
                         <p>{scheduledError}</p>
-
                         <button className="btn btn-primary btn-sm" onClick={fetchUserScheduledAppointments}>Tentar Novamente</button>
                     </div>
-
-                ) : userScheduledAppointments.length === 0 ? (
+                ) : !isLoadingScheduled && userScheduledAppointments.length === 0 ? (
                     <div className="service-empty">
                         <p>
-                            <i className="fa-solid fa-circle-exclamation"></i>
+                            <i className="fa-solid fa-circle-exclamation"></i> 
                             Você ainda não possui agendamentos.
                         </p>
                     </div>
@@ -204,6 +208,13 @@ function DashboardUser() {
                                         <p>
                                             <strong>Profissional:</strong> 
                                             {appt.provider_name}
+                                        </p>
+                                    </div>
+
+                                    <div className="desc-service">
+                                        <p>
+                                            <strong>Especialidade:</strong>
+                                            {appt.provider_specialty}
                                         </p>
                                     </div>
 
@@ -248,17 +259,25 @@ function DashboardUser() {
                 )}
             </section>
 
+            {/* Atendimentos Disponíveis */}
             <section className="create-service">
                 <h3 className="section-title">
-                    <i className="fa-solid fa-briefcase-medical"></i>
+                    <i className="fa-solid fa-briefcase-medical"></i> 
                     Atendimentos Disponíveis
                 </h3>
 
-                {availableAppointments.length === 0 ? (
+                {dataLoading && availableAppointments.length === 0 ? (
+                    <p>Carregando atendimentos disponíveis...</p>
+                ) : error ? (
+                    <div className="alert alert-danger">
+                        <p>{error}</p>
+                        <button className="btn btn-primary btn-sm" onClick={fetchAvailableAppointments}>Tentar Novamente</button>
+                    </div>
+                ) : !dataLoading && availableAppointments.length === 0 ? (
                     <div className="service-empty">
                         <p>
-                            <i className="fa-solid fa-circle-exclamation"></i>
-                            Nenhum atendimento disponível.
+                            <i className="fa-solid fa-circle-exclamation"></i> 
+                            Nenhum atendimento disponível no momento.
                         </p>
                     </div>
                 ) : (
@@ -267,30 +286,32 @@ function DashboardUser() {
                             <div className="item-service appointments-list" key={service.id}>
                                 <div className="body-service">
                                     <h5>{service.specialty}</h5>
+                                    
                                     <div className="desc-service">
                                         <p>
                                             <span>
-                                                <i className="fa-solid fa-calendar-days"></i>
-                                                Data:
-                                            </span>
+                                                <i className="fa-solid fa-calendar-days"></i> Data:
+                                            </span> 
                                             {service.service_date ? new Date(service.service_date).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : 'N/A'}
                                         </p>
                                     </div>
+
                                     <div className="desc-service">
                                         <p>
                                             <span>
-                                                <i className="fa-solid fa-location-dot"></i>
+                                                <i className="fa-solid fa-location-dot"></i> 
                                                 Local:
-                                            </span>
+                                            </span> 
                                             {service.locality}
                                         </p>
                                     </div>
+
                                     <div className="desc-service">
                                         <p>
                                             <span>
-                                                <i className="fa-solid fa-list-ol"></i>
+                                                <i className="fa-solid fa-list-ol"></i> 
                                                 Senhas Disponíveis:
-                                            </span>
+                                            </span> 
                                             {service.qtd_attendance}
                                         </p>
                                     </div>
@@ -298,14 +319,13 @@ function DashboardUser() {
                                     <div className="buttons-actions">
                                         <button className="create-service" type="button"
                                             onClick={() => handleParticiparClick(service)}
-                                            disabled={service.qtd_attendance <= 0}
-                                        >
-                                            <i className="fa-solid fa-user-plus"></i>
-                                            Participar
+                                            disabled={service.qtd_attendance <= 0}>
+
+                                            <i className="fa-solid fa-user-plus"></i> Participar
                                         </button>
 
-                                        <button className="btn-edit" type="button">
-                                            <i className="fa-solid fa-circle-info"></i>
+                                        <button className="btn-edit" type="button" disabled>
+                                            <i className="fa-solid fa-circle-info"></i> 
                                             Mais Informações
                                         </button>
                                     </div>
@@ -316,13 +336,11 @@ function DashboardUser() {
                 )}
             </section>
 
-            <ServiceRegistrationModal 
-                isOpen={isServiceModalOpen}
-                onClose={handleCloseServiceModal} 
-                onHidden={onServiceModalHidden}
-                selectedService={selectedService} 
-                priorities={priorities} 
-                onServiceRegistered={handleServiceRegistered} 
+            <ServiceRegistrationModal
+                selectedService={selectedService}
+                priorities={priorities}
+                onServiceRegistered={handleServiceRegistered}
+                onModalActuallyClosed={handleServiceModalActuallyClosed}
             />
         </main>
     );
