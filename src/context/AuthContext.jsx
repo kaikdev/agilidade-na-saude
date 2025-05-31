@@ -68,23 +68,69 @@ export const AuthProvider = ({ children }) => {
                 return null;
             }
 
-            const fullProfileData = await fetchUserProfile(decoded.id, currentToken, decoded.role);
+            const apiResponse = await fetchUserProfile(decoded.id, currentToken, decoded.role);
 
-            if (fullProfileData) {
+            if (apiResponse) {
+                let profileDetails = {};
+
+                if (decoded.role === 'admin') {
+                    if (apiResponse.success && Array.isArray(apiResponse.data) && apiResponse.data.length > 0) {
+                        const adminDataFromApi = apiResponse.data[0];
+                        profileDetails = {
+                            name: adminDataFromApi.name,
+                            email: adminDataFromApi.email,
+                            crm: adminDataFromApi.crm,
+                            specialty: adminDataFromApi.specialty,
+                            presentation: adminDataFromApi.presentation,
+                        };
+
+                        if (adminDataFromApi.user_id !== decoded.id) {
+                            console.warn("Atenção: ID do token não corresponde ao user_id da resposta /api/admin/:id.");
+                        }
+                    } 
+                    else {
+                        console.error('Estrutura de resposta inesperada para perfil de admin:', apiResponse);
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Falha ao Carregar Perfil',
+                            text: 'Não foi possível carregar os detalhes do seu perfil. Tente fazer login novamente.',
+                            showConfirmButton: false, timer: 3500
+                        });
+
+                        setUser(null); return null;
+                    }
+                } 
+                else if (decoded.role === 'user') {
+                    profileDetails = {
+                        name: apiResponse.name,
+                        email: apiResponse.email,
+                        birth_date: apiResponse.birth_date,
+                    };
+                }
+
                 const userToSet = {
-                    ...fullProfileData,
+                    ...profileDetails,
                     id: decoded.id,
                     role: decoded.role
                 };
+                
+                if (!userToSet.name) {
+                    console.warn('Nome do usuário não foi definido após buscar perfil.', userToSet);
+                }
+
                 setUser(userToSet);
                 return userToSet;
-            } else {
+
+            } 
+            else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Falha ao Carregar Perfil',
                     text: 'Não foi possível carregar os detalhes do seu perfil. Tente fazer login novamente.',
                     showConfirmButton: false, timer: 3500
                 });
+                
                 setUser(null);
                 return null;
             }
