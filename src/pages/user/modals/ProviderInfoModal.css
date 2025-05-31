@@ -1,0 +1,23 @@
+#modalProviderInfo .item-input {
+    flex-direction: column;
+}    
+
+#modalProviderInfo .item-input input,
+#modalProviderInfo textarea {
+    border-radius: 5px;
+    background-color: #f6f6f6;
+    border: 1px solid #dfdfdf;
+}
+
+#modalProviderInfo .item-input label {
+    display: block;
+    width: 100%;
+    text-align: left;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+#modalProviderInfo textarea {
+    font-size: 16px;
+    box-shadow: none !important;
+}

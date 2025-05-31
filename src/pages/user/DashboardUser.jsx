@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import Swal from 'sweetalert2';
 import ServiceRegistrationModal from './modals/ServiceRegistrationModal';
+import ProviderInfoModal from './modals/ProviderInfoModal';
 import './DashboardUser.css';
 
 function DashboardUser() {
@@ -13,6 +14,7 @@ function DashboardUser() {
     const [dataLoading, setDataLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedService, setSelectedService] = useState(null);
+    const [selectedProviderForInfo, setSelectedProviderForInfo] = useState(null);
 
     const [userScheduledAppointments, setUserScheduledAppointments] = useState([]);
     const [isLoadingScheduled, setIsLoadingScheduled] = useState(true);
@@ -136,6 +138,27 @@ function DashboardUser() {
         }
     };
 
+    const handleMoreInfoClick = (service) => {
+        const providerData = {
+            name: service.provider_name || 'Não informado',
+            specialty: service.specialty || 'Não informada',
+            crm: service.provider_crm || 'Não informado',
+            presentation: service.provider_presentation || 'Nenhuma apresentação disponível.'
+        };
+
+        setSelectedProviderForInfo(providerData);
+
+        const modalElement = document.getElementById('modalProviderInfo');
+        if (modalElement) {
+            const existingInstance = window.bootstrap.Modal.getInstance(modalElement);
+            if (existingInstance) {
+                existingInstance.dispose();
+            }
+            const providerInfoModalInstance = new window.bootstrap.Modal(modalElement);
+            providerInfoModalInstance.show();
+        }
+    };
+
     const handleServiceModalActuallyClosed = useCallback(() => {
         setSelectedService(null);
     }, []);
@@ -144,6 +167,23 @@ function DashboardUser() {
         fetchAvailableAppointments();
         fetchUserScheduledAppointments();
     };
+
+    useEffect(() => {
+        const modalElement = document.getElementById('modalProviderInfo');
+        const handleModalHidden = () => {
+            setSelectedProviderForInfo(null);
+        };
+
+        if (modalElement) {
+            modalElement.addEventListener('hidden.bs.modal', handleModalHidden);
+        }
+
+        return () => {
+            if (modalElement) {
+                modalElement.removeEventListener('hidden.bs.modal', handleModalHidden);
+            }
+        };
+    }, []);
 
     if (authLoading) {
         return (<main className="main-dashboard"><div className="title-user"><h3>Verificando sua sessão...</h3><p>Aguarde...</p></div></main>);
@@ -207,21 +247,21 @@ function DashboardUser() {
                                     <div className="desc-service">
                                         <p>
                                             <strong>Profissional:</strong> 
-                                            {appt.provider_name}
+                                            {appt.user_name}
                                         </p>
                                     </div>
 
                                     <div className="desc-service">
                                         <p>
                                             <strong>Especialidade:</strong>
-                                            {appt.provider_specialty}
+                                            {appt.admin_specialty}
                                         </p>
                                     </div>
 
                                     <div className="desc-service">
                                         <p>
                                             <strong>CRM:</strong> 
-                                            {appt.provider_crm || 'Não informado'}
+                                            {appt.provider_crm}
                                         </p>
                                     </div>
 
@@ -324,7 +364,7 @@ function DashboardUser() {
                                             <i className="fa-solid fa-user-plus"></i> Participar
                                         </button>
 
-                                        <button className="btn-edit" type="button" disabled>
+                                        <button className="btn-edit" type="button" onClick={() => handleMoreInfoClick(service)}>
                                             <i className="fa-solid fa-circle-info"></i> 
                                             Mais Informações
                                         </button>
@@ -341,6 +381,10 @@ function DashboardUser() {
                 priorities={priorities}
                 onServiceRegistered={handleServiceRegistered}
                 onModalActuallyClosed={handleServiceModalActuallyClosed}
+            />
+            
+            <ProviderInfoModal
+                providerInfo={selectedProviderForInfo}
             />
         </main>
     );
