@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/react-splide/css';
@@ -17,8 +18,42 @@ import imgPessoa6 from '../assets/images/pessoa-6.jpg';
 import imgPessoa7 from '../assets/images/pessoa-7.jpg';
 import imgPessoa8 from '../assets/images/pessoa-8.jpg';
 import imgFaq from '../assets/images/faq.jpg';
+import UpdatePasswordModal from '../components/modals/UpdatePasswordModal';
 
 function HomePage() {
+    const [isResetModalOpen, setIsResetModalOpen] = useState(false);
+    const [activeResetToken, setActiveResetToken] = useState(null);
+
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        const tokenFromQuery = queryParams.get('resetToken');
+
+        const tokenToUse = tokenFromQuery;
+
+        if (tokenToUse) {
+            console.log("Token de redefinição encontrado na URL:", tokenToUse);
+            setActiveResetToken(tokenToUse);
+            setIsResetModalOpen(true);
+        }
+    }, [location, navigate]);
+
+    const handleModalClose = () => {
+        setIsResetModalOpen(false);
+        setActiveResetToken(null);
+
+        navigate(location.pathname, { replace: true }); 
+    };
+
+    const handlePasswordSuccessfullyReset = () => {
+        setIsResetModalOpen(false);
+        setActiveResetToken(null);
+
+        window.location.href = '/';
+    };
+
     return (
         <main className="main-home">
             <section className="section-main">
@@ -359,6 +394,15 @@ function HomePage() {
                     </div>
                 </div>
             </section>
+
+            {activeResetToken && (
+                <UpdatePasswordModal
+                    isOpen={isResetModalOpen}
+                    onClose={handleModalClose}
+                    token={activeResetToken}
+                    onPasswordResetSuccess={handlePasswordSuccessfullyReset}
+                />
+            )}
         </main>
     );
 }
