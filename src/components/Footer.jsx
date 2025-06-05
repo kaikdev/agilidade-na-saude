@@ -1,9 +1,17 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import logoImgWhite from '../assets/images/logo-white.png'
 import './Footer.css';
+import { useAuth } from '../context/AuthContext';
 
 function Footer() {
+    const location = useLocation();
+    const { isAuthenticated, loading: authLoading } = useAuth();
+
+    const isHome = location.pathname === '/';
+    const showOnlyGitHub = !isHome;
+    const showLoginAndCadastro = isHome && !authLoading && !isAuthenticated;
+
     return (
         <footer className="footer">
             <div className="footer-left">
@@ -24,35 +32,44 @@ function Footer() {
                     
                     <ul className="footer-list">
                         <li>
-                            <a href="#" target="_blank">
+                            <a href="https://github.com/kaikdev/agilidade-na-saude" target="_blank" rel="noopener noreferrer">
                                 GitHub do Projeto
                             </a>
                         </li>
-                        <li>
-                            <a href="#sobre">
-                                Sobre
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#depoimentos">
-                                Depoimentos
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#faq">
-                                FAQ
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                Login
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                Cadastro
-                            </a>
-                        </li>
+
+                        {isAuthenticated && location.pathname !== '/' && (
+                            <li>
+                                <a href="/">Página Inicial</a>
+                            </li>
+                        )}
+
+                        {!showOnlyGitHub && (
+                            <>
+                                <li>
+                                    <a href="#sobre">Sobre</a>
+                                </li>
+
+                                <li>
+                                    <a href="#depoimentos">Depoimentos</a>
+                                </li>
+
+                                <li>
+                                    <a href="#faq">FAQ</a>
+                                </li>
+
+                                {showLoginAndCadastro && (
+                                    <>
+                                        <li>
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#modalLogin">Login</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#modalCadastro">Cadastro</a>
+                                        </li>
+                                    </>
+                                )}
+                            </>
+                        )}
                     </ul>
                 </div>
                 
@@ -63,25 +80,25 @@ function Footer() {
                     
                     <ul className="footer-list">
                         <li>
-                            <a href="https://github.com/seu-github-1" target="_blank">
+                            <a href="https://github.com/kaikdev" target="_blank">
                                 Kaik Silva
                             </a>
                         </li>
 
                         <li>
-                            <a href="https://github.com/seu-github-1" target="_blank">
+                            <a href="https://github.com/vasquesgabriel91" target="_blank">
                                 Gabriel Vasques
                             </a>
                         </li>
 
                         <li>
-                            <a href="https://github.com/seu-github-1" target="_blank">
+                            <a href="https://github.com/user49tbd" target="_blank">
                                 Jonathan Moura
                             </a>
                         </li>
 
                         <li>
-                            <a href="https://github.com/seu-github-1" target="_blank">
+                            <a href="https://github.com/rogeriobgregorio" target="_blank">
                                 Rogério Bernardo
                             </a>
                         </li>
