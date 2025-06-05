@@ -36,3 +36,24 @@
     font-weight: 700;
     letter-spacing: 5px;
 }
+
+@media (max-width: 400px) {
+    .services-list.scheduled-list .desc-service p {
+        display: grid
+    }
+}
+
+@media (max-width: 330px) {
+    .item-service.appointments-list p {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+    .item-service.appointments-list span {
+        justify-content: flex-start;
+    }
+    .services-list.scheduled-list .desc-service p,
+    .item-service.appointments-list p {
+        font-size: 14px;
+    }
+}
