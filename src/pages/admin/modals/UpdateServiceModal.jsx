@@ -10,6 +10,7 @@ function UpdateServiceModal({ selectedAppointment, onServiceUpdated }) {
     const [specialty, setSpecialty] = useState('');
     const [locality, setLocality] = useState('');
     const [serviceDate, setServiceDate] = useState('');
+    const [serviceStartTime, setServiceStartTime] = useState('');
     const [qtdAttendance, setQtdAttendance] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -19,22 +20,32 @@ function UpdateServiceModal({ selectedAppointment, onServiceUpdated }) {
         if (selectedAppointment) {
             setSpecialty(selectedAppointment.specialty || '');
             setLocality(selectedAppointment.locality || '');
-
-            setServiceDate(selectedAppointment.service_date || '');
             setQtdAttendance(selectedAppointment.qtd_attendance || '');
-        } 
-        else {
+            
+            const dateTimeString = selectedAppointment.service_date;
+
+            if (typeof dateTimeString === 'string' && dateTimeString.includes(' ')) {
+                const [datePart, timePart] = dateTimeString.split(' ');
+
+                setServiceDate(datePart);
+                setServiceStartTime(timePart.slice(0, 5));
+            } else {
+                setServiceDate('');
+                setServiceStartTime('');
+            }
+        } else {
             setSpecialty('');
             setLocality('');
             setServiceDate('');
+            setServiceStartTime('');
             setQtdAttendance('');
         }
     }, [selectedAppointment]);
 
-    const formatInputDateForAPI = (dateString) => {
-        if (!dateString) return '';
+    const formatDateTimeForAPI = (dateString, timeString) => {
+        if (!dateString || !timeString) return ''; 
         const [year, month, day] = dateString.split('-');
-        return `${day}/${month}/${year}`;
+        return `${day}/${month}/${year} ${timeString}`;
     };
 
     const handleUpdateService = async (e) => {
@@ -55,11 +66,13 @@ function UpdateServiceModal({ selectedAppointment, onServiceUpdated }) {
         }
 
         try {
+            const formattedServiceDateTime = formatDateTimeForAPI(serviceDate, serviceStartTime);
+
             const payload = {
                 specialty: specialty,
                 locality: locality,
                 qtd_attendance: parseInt(qtdAttendance),
-                service_date: formatInputDateForAPI(serviceDate),
+                service_date: formattedServiceDateTime,
             };
 
             const response = await axios.put(`${API_BASE_URL}/api/admin/appointments/update/${selectedAppointment.id}`, payload, {
@@ -128,7 +141,7 @@ function UpdateServiceModal({ selectedAppointment, onServiceUpdated }) {
 
                         <form onSubmit={handleUpdateService}>
                             <div className="item-input mb-3">
-                                <label htmlFor="specialtyUpdate">Especialidade</label>
+                                <label htmlFor="specialtyUpdate">Títudo do Atendimento</label>
                                 <input
                                     type="text"
                                     className="form-control"
@@ -141,7 +154,7 @@ function UpdateServiceModal({ selectedAppointment, onServiceUpdated }) {
                             </div>
 
                             <div className="item-input mb-3">
-                                <label htmlFor="localityUpdate">Local</label>
+                                <label htmlFor="localityUpdate">Local do Atendimento</label>
                                 <input
                                     type="text"
                                     className="form-control"
@@ -162,6 +175,19 @@ function UpdateServiceModal({ selectedAppointment, onServiceUpdated }) {
                                     value={serviceDate}
                                     onChange={(e) => setServiceDate(e.target.value)}
                                     required
+                                />
+                            </div>
+
+                            <div className="item-input mb-3">
+                                <label htmlFor="updateServiceStartTime">Horário de Início</label>
+                                <input
+                                    type="time"
+                                    className="form-control"
+                                    id="updateServiceStartTime"
+                                    value={serviceStartTime}
+                                    onChange={(e) => setServiceStartTime(e.target.value)}
+                                    required
+                                    disabled={loading}
                                 />
                             </div>
 

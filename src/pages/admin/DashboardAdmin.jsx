@@ -15,6 +15,14 @@ function DashboardAdmin() {
     const [error, setError] = useState(null);
     const [selectedAppointment, setSelectedAppointment] = useState(null);
 
+    const formatDateTime = (datetimeStr) => {
+        const date = new Date(datetimeStr.replace(' ', 'T'));
+        const dateStr = date.toLocaleDateString('pt-BR');
+        const timeStr = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+        return { dateStr, timeStr };
+    };
+
     const fetchAdminAppointments = async () => {
         setDataLoading(true);
         setError(null);
@@ -186,52 +194,67 @@ function DashboardAdmin() {
                     </div>
                 ) : (
                     <div className="services-list">
-                        {appointments.map((appointment) => (
-                            <div className="item-service" key={appointment.id}>
-                                <div className="body-service">
-                                    <h5>{appointment.specialty}</h5>
-                                    <div className="desc-service">
-                                        <p>
-                                            <span>
-                                                <i className="fa-solid fa-calendar-days"></i>
-                                                Data:
-                                            </span>
-                                            {appointment.service_date ? new Date(appointment.service_date).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : 'N/A'}
-                                        </p>
-                                    </div>
-                                    <div className="desc-service">
-                                        <p>
-                                            <span>
-                                                <i className="fa-solid fa-location-dot"></i>
-                                                Local:
-                                            </span>
-                                            {appointment.locality}
-                                        </p>
-                                    </div>
-                                    <div className="desc-service">
-                                        <p>
-                                            <span>
-                                                <i className="fa-solid fa-list-ol"></i>
-                                                Qtd. de Senhas:
-                                            </span>
-                                            {appointment.qtd_attendance}
-                                        </p>
-                                    </div>
+                        {appointments.map((appointment) => {
+                            const { dateStr, timeStr } = appointment.service_date
+                            ? formatDateTime(appointment.service_date)
+                            : { dateStr: 'N/A', timeStr: 'N/A' };
+                            
+                            return (
+                                <div className="item-service" key={appointment.id}>
+                                    <div className="body-service">
+                                        <h5>{appointment.specialty}</h5>
+                                        <div className="desc-service">
+                                            <p>
+                                                <span>
+                                                    <i className="fa-solid fa-calendar-days"></i>
+                                                    Data:
+                                                </span>
+                                                {dateStr}
+                                            </p>
+                                        </div>
+                                        <div className="desc-service">
+                                            <p>
+                                                <span>
+                                                    <i className="fa-solid fa-clock"></i>
+                                                    Horário:
+                                                </span>
+                                                {timeStr}
+                                            </p>
+                                        </div>
+                                        <div className="desc-service">
+                                            <p>
+                                                <span>
+                                                    <i className="fa-solid fa-location-dot"></i>
+                                                    Local:
+                                                </span>
+                                                {appointment.locality}
+                                            </p>
+                                        </div>
+                                        <div className="desc-service">
+                                            <p>
+                                                <span>
+                                                    <i className="fa-solid fa-list-ol"></i>
+                                                    Qtd. de Senhas:
+                                                </span>
+                                                {appointment.qtd_attendance}
+                                            </p>
+                                        </div>
 
-                                    <div className="buttons-actions">
-                                        <button className="btn-edit" type="button" onClick={() => handleEditClick(appointment)}>
-                                            <i className="fa-solid fa-pen-to-square"></i>
-                                            Editar
-                                        </button>
+                                        <div className="buttons-actions">
+                                            <button className="btn-edit" type="button" onClick={() => handleEditClick(appointment)}>
+                                                <i className="fa-solid fa-pen-to-square"></i>
+                                                Editar
+                                            </button>
 
-                                        <button className="btn-delete" type="button" onClick={() => handleDeleteAppointment(appointment.id)}>
-                                            <i className="fa-solid fa-trash-can"></i>
-                                            Excluir
-                                        </button>
+                                            <button className="btn-delete" type="button" onClick={() => handleDeleteAppointment(appointment.id)}>
+                                                <i className="fa-solid fa-trash-can"></i>
+                                                Excluir
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            )   
+                        })}
                     </div>
                 )}
 
