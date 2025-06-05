@@ -75,3 +75,7 @@ main.main-dashboard {
     gap: 1rem;
     min-height: calc(100vh - 70px);
 }
+
+div[vw].enabled {
+    margin-right: 2px !important;
+}
