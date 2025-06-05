@@ -54,7 +54,7 @@ function RegisterModal() {
         let apiUrl = '';
 
         if (selectedRole === 'user') { // Cadastro de Paciente
-            apiUrl = 'http://localhost:3000/api/users';
+            apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/users`;
             payload = {
                 ...payload,
                 birth_date: formatBirthDateForAPI(cadastroData),
@@ -71,7 +71,7 @@ function RegisterModal() {
             }
         } 
         else if (selectedRole === 'admin') { // Cadastro de Médico (Admin)
-            apiUrl = 'http://localhost:3000/api/admin';
+            apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/admin`;
             payload = {
                 ...payload,
                 crm,

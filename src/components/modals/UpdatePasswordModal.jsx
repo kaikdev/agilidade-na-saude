@@ -74,7 +74,7 @@ function UpdatePasswordModal({ isOpen, onClose, token, onPasswordResetSuccess })
         setLoading(true);
 
         try {
-            await axios.post(`http://localhost:3000/api/reset-password/${token}`, {
+            await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/reset-password/${token}`, {
                 newPassword: newPassword
             });
 
