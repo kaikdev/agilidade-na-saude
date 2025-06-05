@@ -270,7 +270,21 @@ function DashboardUser() {
                                     <div className="desc-service">
                                         <p>
                                             <strong>Data:</strong> 
-                                            {appt.service_date ? new Date(appt.service_date).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : 'N/A'}
+                                            {appt.service_date
+                                            ? new Date(appt.service_date).toLocaleDateString('pt-BR')
+                                            : 'N/A'}
+                                        </p>
+                                    </div>
+                                    
+                                    <div className="desc-service">
+                                        <p>
+                                            <strong>Horário:</strong> 
+                                            {appt.service_date
+                                            ? new Date(appt.service_date).toLocaleTimeString('pt-BR', {
+                                                hour: '2-digit',
+                                                minute: '2-digit'
+                                            })
+                                            : 'N/A'}
                                         </p>
                                     </div>
 
@@ -332,9 +346,27 @@ function DashboardUser() {
                                     <div className="desc-service">
                                         <p>
                                             <span>
-                                                <i className="fa-solid fa-calendar-days"></i> Data:
+                                                <i className="fa-solid fa-calendar-days"></i> 
+                                                Data:
                                             </span> 
-                                            {service.service_date ? new Date(service.service_date).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : 'N/A'}
+                                            {service.service_date
+                                            ? new Date(service.service_date).toLocaleDateString('pt-BR')
+                                            : 'N/A'}
+                                        </p>
+                                    </div>
+
+                                    <div className="desc-service">
+                                        <p>
+                                            <span>
+                                                <i className="fa-solid fa-clock"></i> 
+                                                Horário de Início:
+                                            </span> 
+                                            {service.service_date
+                                            ? new Date(service.service_date).toLocaleTimeString('pt-BR', {
+                                                hour: '2-digit',
+                                                minute: '2-digit'
+                                            })
+                                            : 'N/A'}
                                         </p>
                                     </div>
 
