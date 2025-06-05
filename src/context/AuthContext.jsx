@@ -7,6 +7,8 @@ import axios from 'axios';
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
     const [token, setToken] = useState(null);
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -20,10 +22,10 @@ export const AuthProvider = ({ children }) => {
         let apiUrl = '';
         
         if (userRole === 'admin') {
-            apiUrl = `http://localhost:3000/api/admin/${userId}`;
+            apiUrl = `${API_BASE_URL}/api/admin/${userId}`;
         } 
         else if (userRole === 'user') {
-            apiUrl = `http://localhost:3000/api/users/${userId}`;
+            apiUrl = `${API_BASE_URL}/api/users/${userId}`;
         } 
         else {
             console.error('Role de usuário desconhecido ao buscar perfil:', userRole);

@@ -4,6 +4,8 @@ import Swal from 'sweetalert2';
 import './Modal.css';
 
 function RecoverPasswordModal() {
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
     const modalRef = useRef(null);
@@ -27,7 +29,7 @@ function RecoverPasswordModal() {
         setLoading(true);
 
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/forgot-password`, { email });
+            const response = await axios.post(`${API_BASE_URL}/api/forgot-password`, { email });
 
             Swal.fire({
                 icon: 'info',

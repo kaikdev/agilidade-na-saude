@@ -7,6 +7,8 @@ import ProviderInfoModal from './modals/ProviderInfoModal';
 import './DashboardUser.css';
 
 function DashboardUser() {
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
     const { user, token, isAuthenticated, loading: authLoading, logout } = useAuth();
 
     const [availableAppointments, setAvailableAppointments] = useState([]);
@@ -30,7 +32,7 @@ function DashboardUser() {
                 setIsLoadingScheduled(false);
                 return;
             }
-            const response = await axios.get('http://localhost:3000/api/users/appointments/scheduled', {
+            const response = await axios.get(`${API_BASE_URL}/api/users/appointments/scheduled`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (response.data && Array.isArray(response.data.appointments)) {
@@ -66,7 +68,7 @@ function DashboardUser() {
                 return;
             }
 
-            const response = await axios.get('http://localhost:3000/api/users/appointments/list', {
+            const response = await axios.get(`${API_BASE_URL}/api/users/appointments/list`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 

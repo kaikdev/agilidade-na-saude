@@ -7,6 +7,8 @@ import UpdateServiceModal from './modals/UpdateServiceModal';
 import './DashboardAdmin.css';
 
 function DashboardAdmin() {
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
     const { user, token, isAuthenticated, loading: authLoading, logout } = useAuth();
     const [appointments, setAppointments] = useState([]);
     const [dataLoading, setDataLoading] = useState(true);
@@ -22,7 +24,7 @@ function DashboardAdmin() {
                 return;
             }
 
-            const response = await axios.get('http://localhost:3000/api/admin/appointments/listAll', {
+            const response = await axios.get(`${API_BASE_URL}/api/admin/appointments/listAll`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -73,7 +75,7 @@ function DashboardAdmin() {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const response = await axios.delete(`http://localhost:3000/api/admin/appointments/delete/${appointmentId}`, {
+                    const response = await axios.delete(`${API_BASE_URL}/api/admin/appointments/delete/${appointmentId}`, {
                         headers: {
                             Authorization: `Bearer ${token}`
                         }

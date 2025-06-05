@@ -5,6 +5,8 @@ import { useAuth } from '../../../context/AuthContext';
 import './ServiceRegistrationModal.css';
 
 function ServiceRegistrationModal({ selectedService, priorities, onServiceRegistered, onModalActuallyClosed }) {
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+    
     const [selectedPriorityId, setSelectedPriorityId] = useState('');
     const [loading, setLoading] = useState(false);
     const { token } = useAuth();
@@ -72,7 +74,7 @@ function ServiceRegistrationModal({ selectedService, priorities, onServiceRegist
                 level: priorityToSend.nivel,
             };
 
-            const response = await axios.post(`http://localhost:3000/api/users/appointments/createListOfService/${selectedService.id}`, payload, {
+            const response = await axios.post(`${API_BASE_URL}/api/users/appointments/createListOfService/${selectedService.id}`, payload, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 

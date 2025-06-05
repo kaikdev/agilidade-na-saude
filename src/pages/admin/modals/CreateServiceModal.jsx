@@ -6,6 +6,8 @@ import { useAuth } from '../../../context/AuthContext';
 import './ServiceModal.css';
 
 function CreateServiceModal({ onServiceCreated }) {
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
     const [specialty, setSpecialty] = useState('');
     const [locality, setLocality] = useState('');
     const [serviceDate, setServiceDate] = useState('');
@@ -35,7 +37,7 @@ function CreateServiceModal({ onServiceCreated }) {
                 service_date: formatInputDateForAPI(serviceDate),
             };
 
-            const response = await axios.post('http://localhost:3000/api/admin/appointments', payload, {
+            const response = await axios.post(`${API_BASE_URL}/api/admin/appointments`, payload, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

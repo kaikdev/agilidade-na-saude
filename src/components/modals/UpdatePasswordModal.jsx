@@ -5,6 +5,8 @@ import Swal from 'sweetalert2';
 import usePasswordToggle from '../../hooks/usePasswordToggle';
 
 function UpdatePasswordModal({ isOpen, onClose, token, onPasswordResetSuccess }) {
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -74,7 +76,7 @@ function UpdatePasswordModal({ isOpen, onClose, token, onPasswordResetSuccess })
         setLoading(true);
 
         try {
-            await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/reset-password/${token}`, {
+            await axios.post(`${API_BASE_URL}/api/reset-password/${token}`, {
                 newPassword: newPassword
             });
 

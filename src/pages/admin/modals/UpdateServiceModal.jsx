@@ -5,6 +5,8 @@ import { useAuth } from '../../../context/AuthContext';
 import './ServiceModal.css';
 
 function UpdateServiceModal({ selectedAppointment, onServiceUpdated }) {
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+    
     const [specialty, setSpecialty] = useState('');
     const [locality, setLocality] = useState('');
     const [serviceDate, setServiceDate] = useState('');
@@ -60,7 +62,7 @@ function UpdateServiceModal({ selectedAppointment, onServiceUpdated }) {
                 service_date: formatInputDateForAPI(serviceDate),
             };
 
-            const response = await axios.put(`http://localhost:3000/api/admin/appointments/update/${selectedAppointment.id}`, payload, {
+            const response = await axios.put(`${API_BASE_URL}/api/admin/appointments/update/${selectedAppointment.id}`, payload, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

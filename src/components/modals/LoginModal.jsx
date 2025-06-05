@@ -6,6 +6,8 @@ import usePasswordToggle from '../../hooks/usePasswordToggle';
 import { useAuth } from '../../context/AuthContext';
 
 function LoginModal() {
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -22,7 +24,7 @@ function LoginModal() {
         setLoading(true);
 
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/login`, {
+            const response = await axios.post(`${API_BASE_URL}/api/login`, {
                 email,
                 password,
             });
