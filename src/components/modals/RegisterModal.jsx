@@ -33,6 +33,23 @@ function RegisterModal() {
         return `${day}/${month}/${year}`;
     };
 
+    const handleCpfChange = (e) => {
+        let value = e.target.value;
+
+        value = value.replace(/\D/g, '');
+        value = value.substring(0, 11);
+        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+
+        setCadastroCpf(value);
+    };
+
+    const isValidCpf = (cpf) => {
+        const cpfDigits = cpf.replace(/\D/g, '');
+        return cpfDigits.length === 11;
+    };
+
     const handleCadastroSubmit = async (e) => {
         e.preventDefault();
 
@@ -48,10 +65,22 @@ function RegisterModal() {
             return;
         }
 
+        if (!isValidCpf(cadastroCpf)) {
+            Swal.fire({ 
+                icon: 'error', 
+                title: 'CPF Inválido', 
+                text: 'Por favor, insira um CPF válido com 11 dígitos.' 
+            });
+            setCadastroLoading(false);
+            return;
+        }
+
+        const cpfParaApi = cadastroCpf.replace(/\D/g, '');
+
         let payload = {
             name: cadastroNome,
             email: cadastroEmail,
-            cpf: cadastroCpf,
+            cpf: cpfParaApi,
             password: cadastroSenha,
         };
 
@@ -234,11 +263,12 @@ function RegisterModal() {
                                     type="text"
                                     className="form-control"
                                     id="cadastroCpf"
-                                    placeholder="Digite seu CPF"
+                                    placeholder="000.000.000-00"
                                     value={cadastroCpf}
-                                    onChange={(e) => setCadastroCpf(e.target.value)}
+                                    onChange={handleCpfChange}
                                     required
                                     disabled={cadastroLoading}
+                                    maxLength="14"
                                 />
                             </div>
 
