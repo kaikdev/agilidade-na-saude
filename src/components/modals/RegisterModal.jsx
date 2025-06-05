@@ -5,8 +5,11 @@ import Swal from 'sweetalert2';
 import usePasswordToggle from '../../hooks/usePasswordToggle';
 
 function RegisterModal() {
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
     const [cadastroNome, setCadastroNome] = useState('');
     const [cadastroEmail, setCadastroEmail] = useState('');
+    const [cadastroCpf, setCadastroCpf] = useState('');
     const [cadastroData, setCadastroData] = useState('');
     const [cadastroSenha, setCadastroSenha] = useState('');
     const [confirmarSenha, setConfirmarSenha] = useState('');
@@ -48,13 +51,14 @@ function RegisterModal() {
         let payload = {
             name: cadastroNome,
             email: cadastroEmail,
+            cpf: cadastroCpf,
             password: cadastroSenha,
         };
 
         let apiUrl = '';
 
         if (selectedRole === 'user') { // Cadastro de Paciente
-            apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/users`;
+            apiUrl = `${API_BASE_URL}/api/users`;
             payload = {
                 ...payload,
                 birth_date: formatBirthDateForAPI(cadastroData),
@@ -71,7 +75,7 @@ function RegisterModal() {
             }
         } 
         else if (selectedRole === 'admin') { // Cadastro de Médico (Admin)
-            apiUrl = `${process.env.REACT_APP_API_BASE_URL}/api/admin`;
+            apiUrl = `${API_BASE_URL}/api/admin`;
             payload = {
                 ...payload,
                 crm,
@@ -113,6 +117,7 @@ function RegisterModal() {
             // Limpar formulário
             setCadastroNome('');
             setCadastroEmail('');
+            setCadastroCpf('');
             setCadastroData('');
             setCadastroSenha('');
             setConfirmarSenha('');
@@ -219,6 +224,21 @@ function RegisterModal() {
                                     value={cadastroEmail}
                                     onChange={(e) => setCadastroEmail(e.target.value)}
                                     required
+                                />
+                            </div>
+
+                            <div className="item-input mb-3">
+                                <label htmlFor="cadastroCpf">CPF</label>
+
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="cadastroCpf"
+                                    placeholder="Digite seu CPF"
+                                    value={cadastroCpf}
+                                    onChange={(e) => setCadastroCpf(e.target.value)}
+                                    required
+                                    disabled={cadastroLoading}
                                 />
                             </div>
 
