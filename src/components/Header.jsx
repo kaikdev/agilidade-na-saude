@@ -79,6 +79,9 @@ function Header() {
                                 <a href="#faq" onClick={() => setMenuActive(false)}>FAQ</a>
                             </li>
                             <li>
+                                <a href="#contato" onClick={() => setMenuActive(false)}>Contato</a>
+                            </li>
+                            <li>
                                 <a href="#" data-bs-toggle="modal" data-bs-target="#modalLogin" onClick={() => setMenuActive(false)}>Login</a>
                             </li>
                         </>

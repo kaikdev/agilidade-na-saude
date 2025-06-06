@@ -79,3 +79,8 @@ main.main-dashboard {
 div[vw].enabled {
     margin-right: 2px !important;
 }
+
+textarea {
+    border: 1px solid #dfdfdf !important;
+    box-shadow: none !important;
+}

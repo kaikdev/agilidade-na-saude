@@ -83,6 +83,7 @@ img.img-main {
 .section-about {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 1rem;
     padding: 2rem 0;
 }
@@ -123,7 +124,8 @@ h6.tag-section {
 }
 
 .section-depoiments h2,
-.section-faq h2 {
+.section-faq h2,
+.section-contact h2 {
     text-align: center;
     margin-bottom: 1rem;
     font-weight: 700;
@@ -232,12 +234,99 @@ section.section-faq {
 
 #sobre,
 #depoimentos,
-#faq {
+#faq,
+#contato {
     scroll-margin-top: 80px;
 }
 
+.section-contact {
+    text-align: center;
+    padding: 2rem 0px;
+    margin-bottom: 2rem;
+}
+
+.section-contact .body-contact {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.section-contact .body-contact > div {
+    width: 50%;
+}
+
+.section-contact .area-img {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.section-contact form {
+    max-width: 700px;
+    padding: 2rem;
+    background-color: #6ec3ff;
+    border: 1px solid #6da9ff;
+    border-radius: 5px;
+}
+
+.section-contact form input {
+    width: 100%;
+    height: 40px;
+    padding: 5px 10px;
+    border: 1px solid #dfdfdf;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.section-contact form textarea {
+    width: 100%;
+    padding: 5px 10px;
+    border: 1px solid #dfdfdf;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.section-contact form input:focus,
+.section-contact form textarea:focus {
+    background-color: #f6f6f6;
+}
+
+.section-contact button.btn-default {
+    width: 100%;
+    height: 40px;
+    border-radius: 5px;
+    border: none;
+    padding: 5px 10px;
+    font-weight: 600;
+    background-color: #0074e5;
+    color: #fff;
+}
+
+.section-contact button.btn-default:hover {
+    transition: .2s;
+    background-color: #0065ca;
+}
+
+@media (min-width: 1800px) {
+    .section-about .area-img {
+        width: 45%;
+        justify-content: flex-end;
+    }
+}
 @media (max-width: 1200px) {
     .section-about .area-img img {
+        width: 500px;
+    }
+    .section-contact .area-img {
+        justify-content: center;
+    }
+    .section-contact .area-img img {
         width: 500px;
     }
 }
@@ -271,7 +360,24 @@ section.section-faq {
         margin: 0 auto;
         margin-bottom: 1rem;
     }
+    .section-contact {
+        margin-bottom: 0;
+    }
     .section-about .area-img img {
+        width: 100%;
+    }
+    .section-contact .body-contact > div {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .section-contact .body-contact {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .section-contact .area-img img,
+    .section-contact form {
         width: 100%;
     }
 }
@@ -308,5 +414,8 @@ section.section-faq {
     }
     .area-faq button.accordion-button {
         font-size: 16px;
+    }
+    .section-contact form {
+        padding: 1rem;
     }
 }

@@ -57,14 +57,14 @@ function Footer() {
                                     <a href="#faq">FAQ</a>
                                 </li>
 
+                                <li>
+                                    <a href="#contato">Contato</a>
+                                </li>
+
                                 {showLoginAndCadastro && (
                                     <>
                                         <li>
                                             <a href="#" data-bs-toggle="modal" data-bs-target="#modalLogin">Login</a>
-                                        </li>
-
-                                        <li>
-                                            <a href="#" data-bs-toggle="modal" data-bs-target="#modalCadastro">Cadastro</a>
                                         </li>
                                     </>
                                 )}

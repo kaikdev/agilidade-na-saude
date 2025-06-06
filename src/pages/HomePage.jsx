@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/react-splide/css';
 import './HomePage.css';
@@ -18,14 +19,23 @@ import imgPessoa6 from '../assets/images/pessoa-6.jpg';
 import imgPessoa7 from '../assets/images/pessoa-7.jpg';
 import imgPessoa8 from '../assets/images/pessoa-8.jpg';
 import imgFaq from '../assets/images/faq.jpg';
+import imgContato from '../assets/images/contato.jpg';
 import UpdatePasswordModal from '../components/modals/UpdatePasswordModal';
 
 function HomePage() {
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
     const [isResetModalOpen, setIsResetModalOpen] = useState(false);
     const [activeResetToken, setActiveResetToken] = useState(null);
 
     const location = useLocation();
     const navigate = useNavigate();
+
+    const [nome, setNome] = useState('');
+    const [email, setEmail] = useState('');
+    const [mensagem, setMensagem] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [feedback, setFeedback] = useState({ type: '', message: '' });
 
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
@@ -44,7 +54,7 @@ function HomePage() {
         setIsResetModalOpen(false);
         setActiveResetToken(null);
 
-        navigate(location.pathname, { replace: true }); 
+        navigate(location.pathname, { replace: true });
     };
 
     const handlePasswordSuccessfullyReset = () => {
@@ -52,6 +62,49 @@ function HomePage() {
         setActiveResetToken(null);
 
         window.location.href = '/';
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!nome || !email || !mensagem) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Atenção!',
+                text: 'Por favor, preencha todos os campos do formulário.',
+            });
+
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            await axios.post(`${API_BASE_URL}/api/contato`, { nome, email, mensagem });
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'Enviado!',
+                text: 'Sua mensagem foi enviada com sucesso. Agradecemos o seu contato!',
+            });
+
+            setNome('');
+            setEmail('');
+            setMensagem('');
+
+        } 
+        catch (error) {
+            const errorMessage = error.response?.data?.error || 'Ocorreu um erro ao enviar a mensagem. Por favor, tente novamente mais tarde.';
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: errorMessage,
+            });
+        } 
+        finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -391,6 +444,51 @@ function HomePage() {
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <div className="div-separator"></div>
+
+            <section className="section-contact" id="contato">
+                <h6 className="tag-section">Área de Contato</h6>
+
+                <h2>
+                    Alguma sugestão ?
+                    <br></br>
+                    Envie-nos uma mensagem
+                </h2>
+                
+                <div className="body-contact">
+                    <div className="area-img">
+                        <img src={imgContato} alt="Imagem Contato" width="650px" height="auto" />
+                    </div>
+
+                    <div>
+                        <form onSubmit={handleSubmit}>
+                            <div className="item-input-user mb-3">
+                                <label>Nome</label>
+
+                                <input type="text" placeholder="Seu nome" value={nome} onChange={(e) => setNome(e.target.value)} required />
+                            </div>
+                            
+                            <div className="item-input-user mb-3">
+                                <label>Email</label>
+
+                                <input type="email" placeholder="Seu email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                            </div>
+                            
+                            
+                            <div className="item-input-user mb-3">
+                                <label>Mensagem</label>
+
+                                <textarea placeholder="Sua mensagem" rows={4} value={mensagem} onChange={(e) => setMensagem(e.target.value)} required></textarea>
+                            </div>
+                            
+                            <button className="btn-default" type="submit" disabled={loading}>
+                                {loading ? 'Enviando...' : 'Enviar Mensagem'}
+                            </button>
+                        </form>
                     </div>
                 </div>
             </section>
