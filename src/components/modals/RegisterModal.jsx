@@ -20,6 +20,8 @@ function RegisterModal() {
     const [specialty, setSpecialty] = useState('');
     const [presentation, setPresentation] = useState('');
 
+    const [imageFile, setImageFile] = useState(null);
+
     const [cadastroLoading, setCadastroLoading] = useState(false);
 
     const [showPasswordStates, togglePasswordVisibility] = usePasswordToggle({
@@ -77,22 +79,21 @@ function RegisterModal() {
 
         const cpfParaApi = cadastroCpf.replace(/\D/g, '');
 
-        let payload = {
-            name: cadastroNome,
-            email: cadastroEmail,
-            cpf: cpfParaApi,
-            password: cadastroSenha,
-        };
+        const formData = new FormData();
+        formData.append('name', cadastroNome);
+        formData.append('email', cadastroEmail);
+        formData.append('cpf', cpfParaApi);
+        formData.append('password', cadastroSenha);
 
         let apiUrl = '';
 
         if (selectedRole === 'user') { // Cadastro de Paciente
             apiUrl = `${API_BASE_URL}/api/users`;
-            payload = {
-                ...payload,
-                birth_date: formatBirthDateForAPI(cadastroData),
-                role: 'user',
-            };
+
+            formData.append('birth_date', formatBirthDateForAPI(cadastroData));
+
+            formData.append('role', 'user');
+
             if (!cadastroData) {
                 Swal.fire({
                     icon: 'error',
@@ -105,21 +106,22 @@ function RegisterModal() {
         } 
         else if (selectedRole === 'admin') { // Cadastro de Médico (Admin)
             apiUrl = `${API_BASE_URL}/api/admin`;
-            payload = {
-                ...payload,
-                crm,
-                specialty,
-                presentation,
-            };
-            if (!crm || !specialty || !presentation) {
+
+            if (!crm || !specialty || !presentation || !imageFile) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Atenção!',
-                    text: 'Todos os campos (CRM, Especialidade, Apresentação) são obrigatórios para Médicos.',
+                    text: 'Todos os campos (CRM, Especialidade, Apresentação e Imagem de Perfil) são obrigatórios para Médicos.',
                 });
+
                 setCadastroLoading(false);
                 return;
             }
+
+            formData.append('crm', crm);
+            formData.append('specialty', specialty);
+            formData.append('presentation', presentation);
+            formData.append('profileImage', imageFile);
         } 
         else {
             Swal.fire({
@@ -132,7 +134,7 @@ function RegisterModal() {
         }
 
         try {
-            const response = await axios.post(apiUrl, payload);
+            const response = await axios.post(apiUrl, formData);
 
             Swal.fire({
                 icon: 'success',
@@ -154,6 +156,7 @@ function RegisterModal() {
             setCrm('');
             setSpecialty('');
             setPresentation('');
+            setImageFile(null);
         } 
         catch (error) {
             console.error('Erro no cadastro:', error);
@@ -239,6 +242,7 @@ function RegisterModal() {
                                     value={cadastroNome}
                                     onChange={(e) => setCadastroNome(e.target.value)}
                                     required
+                                    disabled={cadastroLoading}
                                 />
                             </div>
 
@@ -253,6 +257,7 @@ function RegisterModal() {
                                     value={cadastroEmail}
                                     onChange={(e) => setCadastroEmail(e.target.value)}
                                     required
+                                    disabled={cadastroLoading}
                                 />
                             </div>
 
@@ -285,7 +290,8 @@ function RegisterModal() {
                                             placeholder="Digite seu CRM"
                                             value={crm}
                                             onChange={(e) => setCrm(e.target.value)}
-                                            required // Torna obrigatório para médicos
+                                            required
+                                            disabled={cadastroLoading}
                                         />
                                     </div>
 
@@ -300,6 +306,21 @@ function RegisterModal() {
                                             value={specialty}
                                             onChange={(e) => setSpecialty(e.target.value)}
                                             required
+                                            disabled={cadastroLoading}
+                                        />
+                                    </div>
+
+                                    <div className="item-input mb-3">
+                                        <label htmlFor="adminImage">Imagem de Perfil</label>
+
+                                        <input
+                                            type="file"
+                                            className="form-control"
+                                            id="adminImage"
+                                            accept="image/*"
+                                            onChange={(e) => setImageFile(e.target.files[0])}
+                                            required
+                                            disabled={cadastroLoading}
                                         />
                                     </div>
 
@@ -314,6 +335,7 @@ function RegisterModal() {
                                             value={presentation}
                                             onChange={(e) => setPresentation(e.target.value)}
                                             required
+                                            disabled={cadastroLoading}
                                         ></textarea>
                                     </div>
                                 </>
@@ -330,6 +352,7 @@ function RegisterModal() {
                                         value={cadastroData}
                                         onChange={(e) => setCadastroData(e.target.value)}
                                         required
+                                        disabled={cadastroLoading}
                                     />
                                 </div>
                             )}
@@ -345,6 +368,7 @@ function RegisterModal() {
                                     value={cadastroSenha}
                                     onChange={(e) => setCadastroSenha(e.target.value)}
                                     required
+                                    disabled={cadastroLoading}
                                 />
 
                                 <button className="show-password" type="button" onClick={() => togglePasswordVisibility('cadastroSenha')}>
@@ -366,6 +390,7 @@ function RegisterModal() {
                                     value={confirmarSenha}
                                     onChange={(e) => setConfirmarSenha(e.target.value)}
                                     required
+                                    disabled={cadastroLoading}
                                 />
 
                                 <button className="show-password" type="button" onClick={() => togglePasswordVisibility('confirmarSenha')}>
