@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import './Modal.css';
 import Swal from 'sweetalert2';
@@ -20,14 +20,24 @@ function RegisterModal() {
     const [specialty, setSpecialty] = useState('');
     const [presentation, setPresentation] = useState('');
 
+    // Campos Imagem
     const [imageFile, setImageFile] = useState(null);
+    const imageInputRef = useRef(null);
 
+    // Loading
     const [cadastroLoading, setCadastroLoading] = useState(false);
 
     const [showPasswordStates, togglePasswordVisibility] = usePasswordToggle({
         cadastroSenha: false,
         confirmarSenha: false,
     });
+
+    useEffect(() => {
+        setImageFile(null);
+        if (imageInputRef.current) {
+            imageInputRef.current.value = null;
+        }
+    }, [selectedRole]);
 
     const formatBirthDateForAPI = (dateString) => {
         if (!dateString) return null;
@@ -91,18 +101,19 @@ function RegisterModal() {
             apiUrl = `${API_BASE_URL}/api/users`;
 
             formData.append('birth_date', formatBirthDateForAPI(cadastroData));
-
             formData.append('role', 'user');
 
-            if (!cadastroData) {
+            if (!cadastroData || !imageFile) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Atenção!',
-                    text: 'Data de Nascimento é obrigatória para Pacientes.',
+                    text: 'Data de Nascimento e Foto do Documento são obrigatórios para Pacientes.',
                 });
                 setCadastroLoading(false);
                 return;
             }
+
+            formData.append('documentImage', imageFile); 
         } 
         else if (selectedRole === 'admin') { // Cadastro de Médico (Admin)
             apiUrl = `${API_BASE_URL}/api/admin`;
@@ -157,6 +168,9 @@ function RegisterModal() {
             setSpecialty('');
             setPresentation('');
             setImageFile(null);
+            if (imageInputRef.current) {
+                imageInputRef.current.value = null;
+            }
         } 
         catch (error) {
             console.error('Erro no cadastro:', error);
@@ -181,6 +195,9 @@ function RegisterModal() {
             setCadastroLoading(false);
         }
     };
+
+    const imageInputLabel = selectedRole === 'admin' ? 'Foto de Perfil' : 'Foto do Documento';
+    const imageInputId = selectedRole === 'admin' ? 'adminImage' : 'userDocumentImage';
 
     return (
         /* Modal de Cadastro */
@@ -311,20 +328,6 @@ function RegisterModal() {
                                     </div>
 
                                     <div className="item-input mb-3">
-                                        <label htmlFor="adminImage">Imagem de Perfil</label>
-
-                                        <input
-                                            type="file"
-                                            className="form-control"
-                                            id="adminImage"
-                                            accept="image/*"
-                                            onChange={(e) => setImageFile(e.target.files[0])}
-                                            required
-                                            disabled={cadastroLoading}
-                                        />
-                                    </div>
-
-                                    <div className="item-input mb-3">
                                         <label htmlFor="presentation">Apresentação</label>
 
                                         <textarea
@@ -351,6 +354,23 @@ function RegisterModal() {
                                         id="cadastroData"
                                         value={cadastroData}
                                         onChange={(e) => setCadastroData(e.target.value)}
+                                        required
+                                        disabled={cadastroLoading}
+                                    />
+                                </div>
+                            )}
+
+                            {(selectedRole === 'user' || selectedRole === 'admin') && (
+                                <div className="item-input mb-3">
+                                    <label htmlFor={imageInputId}>{imageInputLabel}</label>
+
+                                    <input
+                                        type="file"
+                                        className="form-control"
+                                        id={imageInputId}
+                                        accept="image/*"
+                                        ref={imageInputRef}
+                                        onChange={(e) => setImageFile(e.target.files[0])}
                                         required
                                         disabled={cadastroLoading}
                                     />
