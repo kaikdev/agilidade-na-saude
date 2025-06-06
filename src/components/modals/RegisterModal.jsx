@@ -24,6 +24,8 @@ function RegisterModal() {
     const [imageFile, setImageFile] = useState(null);
     const imageInputRef = useRef(null);
 
+    const [imagePreview, setImagePreview] = useState(null);
+
     // Loading
     const [cadastroLoading, setCadastroLoading] = useState(false);
 
@@ -38,6 +40,27 @@ function RegisterModal() {
             imageInputRef.current.value = null;
         }
     }, [selectedRole]);
+
+    useEffect(() => {
+        if (!imageFile) {
+            setImagePreview(null);
+            return;
+        }
+
+        const objectUrl = URL.createObjectURL(imageFile);
+        setImagePreview(objectUrl);
+
+        return () => URL.revokeObjectURL(objectUrl);
+
+    }, [imageFile]);
+
+    const handleRemoveImage = () => {
+        setImageFile(null);
+
+        if (imageInputRef.current) {
+            imageInputRef.current.value = null;
+        }
+    };
 
     const formatBirthDateForAPI = (dateString) => {
         if (!dateString) return null;
@@ -374,6 +397,16 @@ function RegisterModal() {
                                         required
                                         disabled={cadastroLoading}
                                     />
+                                </div>
+                            )}
+
+                            {imagePreview && (
+                                <div className="image-preview-container mb-3">
+                                    <button type="button" className="btn-remove-image" onClick={handleRemoveImage} title="Remover Imagem">
+                                        &times;
+                                    </button>
+                                    
+                                    <img src={imagePreview} alt="Pré-visualização do documento" className="image-preview" />
                                 </div>
                             )}
 
