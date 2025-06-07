@@ -9,6 +9,8 @@ import RegisterModal from './components/modals/RegisterModal';
 import RecoverPasswordModal from './components/modals/RecoverPasswordModal';
 import DashboardAdmin from './pages/admin/DashboardAdmin';
 import DashboardUser from './pages/user/DashboardUser';
+import ProfileUserModal from './components/modals/ProfileUserModal';
+import ProfileAdminModal from './components/modals/ProfileAdminModal';
 
 import './App.css'
 
@@ -37,6 +39,9 @@ function App() {
             </PrivateRoute>
           } />
         </Routes>
+        
+        <ProfileUserModal />
+        <ProfileAdminModal />
 
         <Footer />
       </AuthProvider>

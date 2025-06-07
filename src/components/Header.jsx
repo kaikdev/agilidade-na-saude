@@ -11,6 +11,8 @@ function Header() {
 
     const dashboardPath = user?.role === 'admin' ? '/admin/dashboard' : '/dashboard';
 
+    const profileModalTarget = user?.role === 'admin' ? '#modalProfileAdmin' : '#modalProfileUser';
+
     function toggleMenu() {
         if (timeoutRef.current) {
             clearTimeout(timeoutRef.current);
@@ -60,6 +62,19 @@ function Header() {
                                     Dashboard
                                 </Link>
                             </li>
+
+                            <li>
+                                <a 
+                                  href="#" 
+                                  data-bs-toggle="modal" 
+                                  data-bs-target={profileModalTarget} 
+                                  onClick={() => setMenuActive(false)}
+                                >
+                                    <i className="fa-solid fa-user"></i>
+                                    Meu Perfil
+                                </a>
+                            </li>
+                            
                             <li>
                                 <a href="#" className="logout" onClick={handleLogoutClick}>
                                     <i className="fa-solid fa-right-from-bracket"></i>

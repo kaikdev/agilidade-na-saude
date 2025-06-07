@@ -1,0 +1,112 @@
+.modal-profile .modal-content {
+    border-radius: 5px;
+    border: none;
+}
+
+.modal-profile .modal-body {
+    padding: 3rem 1.5rem 1.5rem;
+    text-align: center;
+}
+
+.modal-profile button.btn-close {
+    font-size: 14px;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+}
+
+.modal-profile h6.modal-title {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.modal-profile .image-document {
+    position: relative;
+    background-color: #f6f6f6;
+    border: 1px solid #dfdfdf;
+    border-radius: 5px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.modal-profile .image-document img {
+    max-width: 100%;
+    max-height: 180px;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+.modal-profile p.title-profile {
+    display: block;
+    width: 100%;
+    text-align: left;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.modal-profile p.title-profile span {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    margin: 0;
+    padding: 10px;
+    background-color: #f6f6f6;
+    border: 1px solid #dfdfdf;
+    border-radius: 5px;
+    font-weight: 400;
+}
+
+.modal-profile p.title-profile:not(:first-child) {
+    margin-bottom: 1rem;
+}
+
+.modal-profile .actions-profile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.modal-profile .actions-profile button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: 100%;
+    height: 40px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 5px;
+    border: none;
+    white-space: nowrap;
+    flex: 1 1 165px;
+    padding: 5px 10px;
+}
+
+.modal-profile .actions-profile button.btn-edit {
+    background-color: #ecc719;
+    color: #372e00;
+}
+
+.modal-profile .actions-profile button.btn-delete {
+    background-color: #d33;
+    color: #fff;
+}
+
+.modal-profile .actions-profile button:hover {
+    transition: .2s;
+    filter: brightness(0.95);
+}
+
+.modal-profile p.title-profile.presentation span {
+    height: auto;
+}
+
+@media (max-width: 415px) {
+    .modal-profile .actions-profile {
+        gap: 10px;
+    }
+}
