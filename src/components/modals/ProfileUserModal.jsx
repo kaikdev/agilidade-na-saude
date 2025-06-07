@@ -66,11 +66,7 @@ function ProfileUserModal() {
         });
 
         if (result.isConfirmed) {
-            const deleteUrl = profileData?.links?.delete;
-            if (!deleteUrl) {
-                Swal.fire('Erro!', 'Não foi possível encontrar a rota para exclusão.', 'error');
-                return;
-            }
+            const deleteUrl = `${API_BASE_URL}/api/users/delete/${user.id}`;
 
             try {
                 await axios.delete(deleteUrl, {

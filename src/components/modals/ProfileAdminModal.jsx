@@ -7,7 +7,8 @@ import './ProfileModal.css';
 
 function ProfileAdminModal() {
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-    const { user, token } = useAuth();
+
+    const { user, token, logout } = useAuth();
 
     const [profileData, setProfileData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -53,6 +54,50 @@ function ProfileAdminModal() {
             modalElement.removeEventListener('show.bs.modal', handleShowModal);
         };
     }, [fetchAdminProfile]);
+
+    const handleDeleteAccount = async () => {
+        const modalElement = document.getElementById('modalProfileAdmin');
+        const modalInstance = window.bootstrap.Modal.getInstance(modalElement);
+
+        const result = await Swal.fire({
+            title: 'Você tem certeza?',
+            text: "Esta ação é irreversível e todos os seus dados serão deletados.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sim, excluir!',
+            cancelButtonText: 'Cancelar'
+        });
+
+        if (result.isConfirmed) {
+            const deleteUrl = `${API_BASE_URL}/api/admin/delete/${user.id}`;
+
+            try {
+                await axios.delete(deleteUrl, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                if (modalInstance) {
+                    modalInstance.hide();
+                }
+
+                await Swal.fire(
+                    'Excluída!',
+                    'Sua conta foi excluída com sucesso.',
+                    'success'
+                );
+                
+                setTimeout(() => {
+                    logout(false); 
+                }, 200);
+            } 
+            catch (err) {
+                const errorMessage = err.response?.data?.error || "Ocorreu um erro ao excluir sua conta.";
+                Swal.fire('Erro!', errorMessage, 'error');
+            }
+        }
+    };
 
     const imageUrl = profileData?.profile_image_path
         ? `${API_BASE_URL}${profileData.profile_image_path}`
@@ -119,7 +164,7 @@ function ProfileAdminModal() {
                                         Editar Perfil
                                     </button>
 
-                                    <button className="btn-delete" type="button">
+                                    <button className="btn-delete" type="button" onClick={handleDeleteAccount}>
                                         <i className="fa-solid fa-trash-can"></i>
                                         Excluir Perfil
                                     </button>
