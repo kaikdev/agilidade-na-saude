@@ -145,7 +145,8 @@ function DashboardUser() {
             name: service.provider_name || 'Não informado',
             specialty: service.specialty || 'Não informada',
             crm: service.provider_crm || 'Não informado',
-            presentation: service.provider_presentation || 'Nenhuma apresentação disponível.'
+            presentation: service.provider_presentation || 'Nenhuma apresentação disponível.',
+            image_url: service.provider_image_url || null
         };
 
         setSelectedProviderForInfo(providerData);

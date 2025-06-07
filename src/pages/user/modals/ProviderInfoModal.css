@@ -21,3 +21,24 @@
     font-size: 16px;
     box-shadow: none !important;
 }
+
+#modalProviderInfo .item-input p {
+    display: block;
+    width: 100%;
+    text-align: left;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.img-provider-info {
+    width: 180px;
+    height: 180px;
+    min-width: 180px;
+    min-height: 180px;
+    background-color: #f6f6f6;
+    border: 1px solid #dfdfdf;
+    border-radius: 50%;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}

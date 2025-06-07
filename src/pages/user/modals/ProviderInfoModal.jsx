@@ -2,6 +2,14 @@ import React from 'react';
 import './ProviderInfoModal.css';
 
 function ProviderInfoModal({ providerInfo }) {
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+    const defaultProviderImage = null;
+    
+    const imageUrl = providerInfo?.image_url 
+        ? `${API_BASE_URL}${providerInfo.image_url}` 
+        : defaultProviderImage;
+        
     return (
         /* Modal Mais Informações */
         <div className="modal fade" id="modalProviderInfo" tabIndex="-1" aria-labelledby="modalProviderInfoLabel" aria-hidden="true">
@@ -15,6 +23,16 @@ function ProviderInfoModal({ providerInfo }) {
                         </h6>
 
                         <form>
+                            <div className="item-input mb-3">
+                                <p>Foto do Profissional</p>
+
+                                <div className="img-provider-info" id="providerImageInfoModal"
+                                    style={{
+                                        backgroundImage: `url('${imageUrl}')`
+                                    }}
+                                ></div>
+                            </div>
+
                             <div className="item-input mb-3">
                                 <label htmlFor="providerNameInfoModal">Nome do Profissional</label>
 
