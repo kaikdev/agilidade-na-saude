@@ -8,7 +8,7 @@ import './ProfileModal.css';
 function ProfileUserModal() {
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-    const { user, token } = useAuth();
+    const { user, token, logout } = useAuth();
 
     const [profileData, setProfileData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -25,12 +25,12 @@ function ProfileUserModal() {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setProfileData(response.data);
-        } 
+        }
         catch (err) {
             const errorMessage = err.response?.data?.error || "Erro ao buscar dados do perfil.";
             setError(errorMessage);
             Swal.fire('Erro!', errorMessage, 'error');
-        } 
+        }
         finally {
             setIsLoading(false);
         }
@@ -50,8 +50,55 @@ function ProfileUserModal() {
         };
     }, [fetchUserProfile]);
 
-    const defaultProviderImage = null;
+    const handleDeleteAccount = async () => {
+        const modalElement = document.getElementById('modalProfileUser');
+        const modalInstance = window.bootstrap.Modal.getInstance(modalElement);
 
+        const result = await Swal.fire({
+            title: 'Você tem certeza?',
+            text: "Esta ação é irreversível e todos os seus dados serão deletados.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sim, excluir!',
+            cancelButtonText: 'Cancelar'
+        });
+
+        if (result.isConfirmed) {
+            const deleteUrl = profileData?.links?.delete;
+            if (!deleteUrl) {
+                Swal.fire('Erro!', 'Não foi possível encontrar a rota para exclusão.', 'error');
+                return;
+            }
+
+            try {
+                await axios.delete(deleteUrl, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                if (modalInstance) {
+                    modalInstance.hide();
+                }
+
+                await Swal.fire(
+                    'Excluída!',
+                    'Sua conta foi excluída com sucesso.',
+                    'success'
+                );
+                
+                setTimeout(() => {
+                    logout(false); 
+                }, 200);
+            } 
+            catch (err) {
+                const errorMessage = err.response?.data?.error || "Ocorreu um erro ao excluir sua conta.";
+                Swal.fire('Erro!', errorMessage, 'error');
+            }
+        }
+    };
+
+    const defaultProviderImage = null;
     const imageUrl = profileData?.profile_image_path
         ? `${API_BASE_URL}${profileData.profile_image_path}`
         : defaultProviderImage;
@@ -62,7 +109,7 @@ function ProfileUserModal() {
                 <div className="modal-content">
                     <div className="modal-body">
                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                        
+
                         <h6 className="modal-title" id="modalProfileUserLabel">Meu Perfil</h6>
 
                         {isLoading && <p>Carregando perfil...</p>}
@@ -75,7 +122,7 @@ function ProfileUserModal() {
                                     <p className="title-profile">Foto do Documento</p>
 
                                     <div className="image-document">
-                                        <img src={imageUrl} alt="Foto do Documento" /> 
+                                        <img src={imageUrl} alt="Foto do Documento" />
                                     </div>
                                 </div>
 
@@ -105,7 +152,7 @@ function ProfileUserModal() {
                                         Editar Perfil
                                     </button>
 
-                                    <button className="btn-delete" type="button">
+                                    <button className="btn-delete" type="button" onClick={handleDeleteAccount}>
                                         <i className="fa-solid fa-trash-can"></i>
                                         Excluir Perfil
                                     </button>
