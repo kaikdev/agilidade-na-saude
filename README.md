@@ -21,8 +21,8 @@ Facilitar o acesso da população a **atendimentos médicos gratuitos**, promove
 - HTML5
 - CSS3
 - JavaScript (ES6+)
-- [React Router](https://reactrouter.com/) *(caso utilize rotas)*
-- [Axios](https://axios-http.com/) *(caso utilize requisições HTTP)*
+- [React Router](https://reactrouter.com/)
+- [Axios](https://axios-http.com/)
 
 ## 🚀 Como Executar o Projeto
 
@@ -53,9 +53,8 @@ Facilitar o acesso da população a **atendimentos médicos gratuitos**, promove
 
 ## 💡 Futuras Melhorias
 
-- Integração com bancos de dados e autenticação de usuários.
 - Adição de filtros de especialidades médicas.
-- Notificações por e-mail ou SMS.
+- Notificações em tempo real.
 - Dashboard para relatórios de atendimentos realizados.
 
 ## 🤝 Contribuições
