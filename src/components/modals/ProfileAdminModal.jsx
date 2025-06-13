@@ -67,7 +67,7 @@ function ProfileAdminModal() {
         };
     }, [fetchAdminProfile]);
 
-    // Handlers para o formulário de edição
+
     const handleEditClick = () => {
         setFormData({
             name: profileData?.name || '',
@@ -118,7 +118,7 @@ function ProfileAdminModal() {
             Swal.fire({
                 icon: 'error',
                 title: 'Dados Inválidos',
-                text: 'O CPF deve conter 11 dígitos.'
+                text: 'O CPF informado é inválido.'
             });
 
             return;
