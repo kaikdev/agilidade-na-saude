@@ -10,7 +10,6 @@ function UpdatePasswordModal({ isOpen, onClose, token, onPasswordResetSuccess })
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [loading, setLoading] = useState(false);
-    const [formError, setFormError] = useState('');
 
     const [showPasswordStates, togglePasswordVisibility] = usePasswordToggle({
         loginSenha: false,
@@ -54,22 +53,28 @@ function UpdatePasswordModal({ isOpen, onClose, token, onPasswordResetSuccess })
         if (isOpen) {
             setNewPassword('');
             setConfirmPassword('');
-            setFormError('');
             setLoading(false); // Reseta o loading
         }
     }, [isOpen]);
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-        setFormError('');
 
         if (!newPassword || !confirmPassword) {
-            setFormError('Por favor, preencha os dois campos de senha.');
+            Swal.fire({
+                icon: 'warning',
+                title: 'Campos Incompletos',
+                text: 'Por favor, preencha os dois campos de senha.',
+            });
             return;
         }
 
         if (newPassword !== confirmPassword) {
-            setFormError('As senhas não coincidem.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro de Validação',
+                text: 'As senhas não coincidem. Por favor, tente novamente.',
+            });
             return;
         }
 
@@ -117,8 +122,6 @@ function UpdatePasswordModal({ isOpen, onClose, token, onPasswordResetSuccess })
                 <div className="modal-content">
                     <div className="modal-body">
                         <h6 className="modal-title text-center mb-3" id="modalUpdatePasswordLabel">Redefinir Senha</h6>
-
-                        {formError && <p className="text-danger text-center small">{formError}</p>}
 
                         <form onSubmit={handleFormSubmit}>
                             <div className="item-input password mb-3">
