@@ -74,13 +74,14 @@ function DashboardUser() {
 
             if (Array.isArray(response.data.appointments)) {
                 const now = new Date();
-
-                const futureAppointments = response.data.appointments.filter(appointment => {
+                
+                const trulyAvailableAppointments = response.data.appointments.filter(appointment => {
                     const appointmentDate = new Date(appointment.service_date);
-                    return appointmentDate > now;
+
+                    return appointmentDate > now && appointment.qtd_attendance > 0;
                 });
 
-                setAvailableAppointments(futureAppointments);
+                setAvailableAppointments(trulyAvailableAppointments);
             }
 
             if (Array.isArray(response.data.priorites)) {
