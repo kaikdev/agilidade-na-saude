@@ -38,19 +38,19 @@ function DashboardUser() {
             if (response.data && Array.isArray(response.data.appointments)) {
                 setUserScheduledAppointments(response.data.appointments);
             }
-        } 
+        }
         catch (err) {
             console.error("Erro ao buscar Meus Agendamentos:", err);
             let errorMessage = 'Ocorreu um erro ao carregar seus agendamentos.';
 
             if (err.response) {
                 errorMessage = err.response.data.error || err.response.data.message || `Erro ${err.response.status}`;
-            } 
+            }
             else if (err.request) {
                 errorMessage = 'Não foi possível conectar ao servidor (Meus Agendamentos).';
             }
             setScheduledError(errorMessage);
-        } 
+        }
         finally {
             setIsLoadingScheduled(false);
         }
@@ -73,13 +73,20 @@ function DashboardUser() {
             });
 
             if (Array.isArray(response.data.appointments)) {
-                setAvailableAppointments(response.data.appointments);
+                const now = new Date();
+
+                const futureAppointments = response.data.appointments.filter(appointment => {
+                    const appointmentDate = new Date(appointment.service_date);
+                    return appointmentDate > now;
+                });
+
+                setAvailableAppointments(futureAppointments);
             }
 
             if (Array.isArray(response.data.priorites)) {
                 setPriorities(response.data.priorites);
             }
-        } 
+        }
         catch (err) {
             console.error("Erro ao buscar Atendimentos Disponíveis:", err);
             let errorMessage = 'Ocorreu um erro ao carregar os atendimentos disponíveis.';
@@ -89,11 +96,11 @@ function DashboardUser() {
                     errorMessage = 'Acesso não autorizado. Sua sessão pode ter expirado.';
                     logout(false, errorMessage);
                     return;
-                } 
+                }
                 else {
                     errorMessage = err.response.data.error || err.response.data.message || `Erro ${err.response.status}`;
                 }
-            } 
+            }
             else if (err.request) {
                 errorMessage = 'Não foi possível conectar ao servidor (Atend. Disponíveis).';
             }
@@ -105,17 +112,17 @@ function DashboardUser() {
                 text: errorMessage,
                 confirmButtonText: 'Ok'
             });
-        } 
+        }
         finally {
             setDataLoading(false);
         }
-    }, [isAuthenticated, token, user?.id, logout]);
+    }, [isAuthenticated, token, user?.id, logout, API_BASE_URL]);
 
     useEffect(() => {
         if (!authLoading && isAuthenticated) {
             fetchAvailableAppointments();
             fetchUserScheduledAppointments();
-        } 
+        }
         else if (!authLoading && !isAuthenticated) {
             setAvailableAppointments([]); setPriorities([]); setUserScheduledAppointments([]);
             setDataLoading(false); setIsLoadingScheduled(false); setError(null); setScheduledError(null);
@@ -203,9 +210,9 @@ function DashboardUser() {
             <main className="main-dashboard">
                 <div className="title-user">
                     <h3 style={{ color: 'red' }}>Erro ao carregar o Dashboard</h3>
-                    
+
                     <p>{error || scheduledError}</p>
-                    
+
                     <button className="btn btn-primary mt-3" onClick={() => { fetchAvailableAppointments(); fetchUserScheduledAppointments(); }}>Tentar Novamente</button>
                 </div>
             </main>
@@ -222,7 +229,7 @@ function DashboardUser() {
             {/* Meus Agendamentos */}
             <section className="create-service">
                 <h3 className="section-title">
-                    <i className="fa-solid fa-calendar-check"></i> 
+                    <i className="fa-solid fa-calendar-check"></i>
                     Meus Agendamentos
                 </h3>
 
@@ -236,7 +243,7 @@ function DashboardUser() {
                 ) : !isLoadingScheduled && userScheduledAppointments.length === 0 ? (
                     <div className="service-empty">
                         <p>
-                            <i className="fa-solid fa-circle-exclamation"></i> 
+                            <i className="fa-solid fa-circle-exclamation"></i>
                             Você ainda não possui agendamentos.
                         </p>
                     </div>
@@ -249,7 +256,7 @@ function DashboardUser() {
 
                                     <div className="desc-service">
                                         <p>
-                                            <strong>Profissional:</strong> 
+                                            <strong>Profissional:</strong>
                                             {appt.user_name}
                                         </p>
                                     </div>
@@ -263,49 +270,49 @@ function DashboardUser() {
 
                                     <div className="desc-service">
                                         <p>
-                                            <strong>CRM:</strong> 
+                                            <strong>CRM:</strong>
                                             {appt.provider_crm}
                                         </p>
                                     </div>
 
                                     <div className="desc-service">
                                         <p>
-                                            <strong>Data:</strong> 
+                                            <strong>Data:</strong>
                                             {appt.service_date
-                                            ? new Date(appt.service_date).toLocaleDateString('pt-BR')
-                                            : 'N/A'}
-                                        </p>
-                                    </div>
-                                    
-                                    <div className="desc-service">
-                                        <p>
-                                            <strong>Horário:</strong> 
-                                            {appt.service_date
-                                            ? new Date(appt.service_date).toLocaleTimeString('pt-BR', {
-                                                hour: '2-digit',
-                                                minute: '2-digit'
-                                            })
-                                            : 'N/A'}
+                                                ? new Date(appt.service_date).toLocaleDateString('pt-BR')
+                                                : 'N/A'}
                                         </p>
                                     </div>
 
                                     <div className="desc-service">
                                         <p>
-                                            <strong>Local:</strong> 
+                                            <strong>Horário:</strong>
+                                            {appt.service_date
+                                                ? new Date(appt.service_date).toLocaleTimeString('pt-BR', {
+                                                    hour: '2-digit',
+                                                    minute: '2-digit'
+                                                })
+                                                : 'N/A'}
+                                        </p>
+                                    </div>
+
+                                    <div className="desc-service">
+                                        <p>
+                                            <strong>Local:</strong>
                                             {appt.locality}
                                         </p>
                                     </div>
 
                                     <div className="desc-service">
                                         <p>
-                                            <strong>Prioridade:</strong> 
+                                            <strong>Prioridade:</strong>
                                             {appt.priority}
                                         </p>
                                     </div>
 
                                     <div className="desc-service">
                                         <p>
-                                            <strong>Senha:</strong> 
+                                            <strong>Senha:</strong>
                                             <span className="badge bg-primary">{appt.password}</span>
                                         </p>
                                     </div>
@@ -319,7 +326,7 @@ function DashboardUser() {
             {/* Atendimentos Disponíveis */}
             <section className="create-service">
                 <h3 className="section-title">
-                    <i className="fa-solid fa-briefcase-medical"></i> 
+                    <i className="fa-solid fa-briefcase-medical"></i>
                     Atendimentos Disponíveis
                 </h3>
 
@@ -333,7 +340,7 @@ function DashboardUser() {
                 ) : !dataLoading && availableAppointments.length === 0 ? (
                     <div className="service-empty">
                         <p>
-                            <i className="fa-solid fa-circle-exclamation"></i> 
+                            <i className="fa-solid fa-circle-exclamation"></i>
                             Nenhum atendimento disponível no momento.
                         </p>
                     </div>
@@ -343,40 +350,40 @@ function DashboardUser() {
                             <div className="item-service appointments-list" key={service.id}>
                                 <div className="body-service">
                                     <h5>{service.specialty}</h5>
-                                    
+
                                     <div className="desc-service">
                                         <p>
                                             <span>
-                                                <i className="fa-solid fa-calendar-days"></i> 
+                                                <i className="fa-solid fa-calendar-days"></i>
                                                 Data:
-                                            </span> 
+                                            </span>
                                             {service.service_date
-                                            ? new Date(service.service_date).toLocaleDateString('pt-BR')
-                                            : 'N/A'}
+                                                ? new Date(service.service_date).toLocaleDateString('pt-BR')
+                                                : 'N/A'}
                                         </p>
                                     </div>
 
                                     <div className="desc-service">
                                         <p>
                                             <span>
-                                                <i className="fa-solid fa-clock"></i> 
+                                                <i className="fa-solid fa-clock"></i>
                                                 Horário de Início:
-                                            </span> 
+                                            </span>
                                             {service.service_date
-                                            ? new Date(service.service_date).toLocaleTimeString('pt-BR', {
-                                                hour: '2-digit',
-                                                minute: '2-digit'
-                                            })
-                                            : 'N/A'}
+                                                ? new Date(service.service_date).toLocaleTimeString('pt-BR', {
+                                                    hour: '2-digit',
+                                                    minute: '2-digit'
+                                                })
+                                                : 'N/A'}
                                         </p>
                                     </div>
 
                                     <div className="desc-service">
                                         <p>
                                             <span>
-                                                <i className="fa-solid fa-location-dot"></i> 
+                                                <i className="fa-solid fa-location-dot"></i>
                                                 Local:
-                                            </span> 
+                                            </span>
                                             {service.locality}
                                         </p>
                                     </div>
@@ -384,9 +391,9 @@ function DashboardUser() {
                                     <div className="desc-service">
                                         <p>
                                             <span>
-                                                <i className="fa-solid fa-list-ol"></i> 
+                                                <i className="fa-solid fa-list-ol"></i>
                                                 Senhas Disponíveis:
-                                            </span> 
+                                            </span>
                                             {service.qtd_attendance}
                                         </p>
                                     </div>
@@ -400,7 +407,7 @@ function DashboardUser() {
                                         </button>
 
                                         <button className="btn-edit" type="button" onClick={() => handleMoreInfoClick(service)}>
-                                            <i className="fa-solid fa-circle-info"></i> 
+                                            <i className="fa-solid fa-circle-info"></i>
                                             Mais Informações
                                         </button>
                                     </div>
@@ -417,7 +424,7 @@ function DashboardUser() {
                 onServiceRegistered={handleServiceRegistered}
                 onModalActuallyClosed={handleServiceModalActuallyClosed}
             />
-            
+
             <ProviderInfoModal
                 providerInfo={selectedProviderForInfo}
             />
