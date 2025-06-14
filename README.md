@@ -59,12 +59,8 @@ Facilitar o acesso da população a **atendimentos médicos gratuitos**, promove
 
 ## 🤝 Contribuições
 
-Contribuições são bem-vindas! Sinta-se à vontade para enviar sugestões, reportar problemas ou abrir pull requests.
+- Contribuições são bem-vindas! Sinta-se à vontade para enviar sugestões, reportar problemas ou abrir pull requests.
 
-## 📄 Licença
+## 🎓 Projeto Acadêmico
 
-Este projeto está sob a licença [MIT](LICENSE).
-
----
-
-Desenvolvido para o Projeto Integrador do 2º Semestre de Desenvolvimento de Software Multiplataforma, da Fatec da Zona Leste.
+- Esse Sistema foi Desenvolvido para o "Projeto Integrador" do 2º Semestre de Desenvolvimento de Software Multiplataforma, da Fatec da Zona Leste.
