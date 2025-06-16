@@ -119,9 +119,14 @@ button.btn-delete {
     color: #fff;
 }
 
-button.btn-display {
+button.btn-management {
     background-color: #0074e5;
     color: #fff;
+}
+
+button.btn-display {
+    background-color: #e59c00;
+    color: #181100;
 }
 
 button.create-service {

@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import Swal from 'sweetalert2';
 import CreateServiceModal from './modals/CreateServiceModal';
 import UpdateServiceModal from './modals/UpdateServiceModal';
+import ManageQueueModal from './modals/ManageQueueModal';
 import './DashboardAdmin.css';
 
 function DashboardAdmin() {
@@ -14,6 +15,7 @@ function DashboardAdmin() {
     const [dataLoading, setDataLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedAppointment, setSelectedAppointment] = useState(null);
+    const [serviceIdToManage, setServiceIdToManage] = useState(null);
 
     const formatDateTime = (datetimeStr) => {
         const date = new Date(datetimeStr.replace(' ', 'T'));
@@ -149,6 +151,10 @@ function DashboardAdmin() {
         }
     };
 
+    const handleManageQueueClick = (serviceId) => {
+        setServiceIdToManage(serviceId);
+    };
+
     useEffect(() => {
         if (!authLoading && isAuthenticated) {
             fetchAdminAppointments();
@@ -259,6 +265,14 @@ function DashboardAdmin() {
                                         </div>
 
                                         <div className="buttons-actions">
+                                            <button className="btn-management" type="button"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalManageQueue"
+                                            onClick={() => handleManageQueueClick(appointment.id)}>
+                                                <i className="fa-solid fa-users-gear"></i>
+                                                Gerenciar Fila
+                                            </button>
+
                                             <button className="btn-display" type="button" onClick={() => handleOpenDisplayPanel(appointment.links?.displayScreen)} disabled={!appointment.links?.displayScreen}>
                                                 <i className="fa-solid fa-display"></i>
                                                 Painel de Senhas
@@ -293,6 +307,11 @@ function DashboardAdmin() {
             <UpdateServiceModal
                 selectedAppointment={selectedAppointment}
                 onServiceUpdated={fetchAdminAppointments}
+            />
+
+            <ManageQueueModal 
+                serviceId={serviceIdToManage} 
+                onQueueUpdate={fetchAdminAppointments} 
             />
         </main>
     );
