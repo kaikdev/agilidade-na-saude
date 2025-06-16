@@ -74,7 +74,7 @@ function DashboardUser() {
 
             if (Array.isArray(response.data.appointments)) {
                 const now = new Date();
-                
+
                 const trulyAvailableAppointments = response.data.appointments.filter(appointment => {
                     const appointmentDate = new Date(appointment.service_date);
 
@@ -130,6 +130,48 @@ function DashboardUser() {
             setSelectedService(null);
         }
     }, [authLoading, isAuthenticated, fetchAvailableAppointments, fetchUserScheduledAppointments]);
+
+    const handleTrackQueue = async (scheduledId) => {
+        Swal.fire({
+            title: 'Buscando sua posição...',
+            didOpen: () => {
+                Swal.showLoading();
+            },
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+        });
+
+        try {
+            const response = await axios.get(`${API_BASE_URL}/api/users/queue/status/${scheduledId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            const { data } = response.data;
+
+            Swal.close();
+
+            Swal.fire({
+                icon: 'info',
+                title: 'Posição na Fila',
+                html: `
+                    <p><strong>Atendimento:</strong> ${data.specialty || 'N/A'}</p>
+                    <br>
+                    <p>Sua Posição: <strong>${data.yourPosition}º</strong></p>
+                    <p>Pessoas na sua frente: <strong>${data.peopleInFront}</strong></p>
+                    <p>Total de pessoas na fila: <strong>${data.totalInQueue}</strong></p>
+                `,
+                confirmButtonText: 'OK!'
+            });
+
+        } catch (err) {
+            const errorMessage = err.response?.data?.error || "Não foi possível buscar o status da fila. Tente novamente mais tarde.";
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro!',
+                text: errorMessage,
+            });
+        }
+    };
 
     const handleParticiparClick = (service) => {
         setSelectedService(service);
@@ -316,6 +358,13 @@ function DashboardUser() {
                                             <strong>Senha:</strong>
                                             <span className="badge bg-primary">{appt.password}</span>
                                         </p>
+                                    </div>
+
+                                    <div className="buttons-actions">
+                                        <button className="btn-edit" type="button" onClick={() => handleTrackQueue(appt.consultation_id)}>
+                                            <i className="fa-solid fa-users-rectangle"></i>
+                                            Acompanhar Fila
+                                        </button>
                                     </div>
                                 </div>
                             </div>

@@ -211,7 +211,7 @@ function DashboardAdmin() {
                         </p>
                     </div>
                 ) : (
-                    <div className="services-list">
+                    <div className="services-list dash-admin">
                         {appointments.map((appointment) => {
                             const { dateStr, timeStr } = appointment.service_date
                                 ? formatDateTime(appointment.service_date)
