@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import Swal from 'sweetalert2';
 import CreateServiceModal from './modals/CreateServiceModal';
 import UpdateServiceModal from './modals/UpdateServiceModal';
 import ManageQueueModal from './modals/ManageQueueModal';
+import { formatCPF, formatDateBR } from '../../utils/formatters';
 import './DashboardAdmin.css';
 
 function DashboardAdmin() {
@@ -16,6 +17,8 @@ function DashboardAdmin() {
     const [error, setError] = useState(null);
     const [selectedAppointment, setSelectedAppointment] = useState(null);
     const [serviceIdToManage, setServiceIdToManage] = useState(null);
+    const [historyData, setHistoryData] = useState([]);
+    const [isHistoryLoading, setIsHistoryLoading] = useState(true);
 
     const formatDateTime = (datetimeStr) => {
         const date = new Date(datetimeStr.replace(' ', 'T'));
@@ -49,7 +52,7 @@ function DashboardAdmin() {
 
         } catch (err) {
             let errorMessage = 'Ocorreu um erro ao carregar seus atendimentos.';
-            
+
             if (err.response) {
                 if (err.response.status === 401 || err.response.status === 403) {
                     errorMessage = 'Acesso não autorizado. Sua sessão pode ter expirado ou você não tem permissão.';
@@ -59,7 +62,7 @@ function DashboardAdmin() {
                 else {
                     errorMessage = err.response.data.error || err.response.data.message || errorMessage;
                 }
-            } 
+            }
             else if (err.request) {
                 errorMessage = 'Não foi possível conectar ao servidor. Verifique sua conexão ou tente novamente mais tarde.';
             }
@@ -155,12 +158,41 @@ function DashboardAdmin() {
         setServiceIdToManage(serviceId);
     };
 
+    const fetchAdminHistory = useCallback(async () => {
+        setIsHistoryLoading(true);
+        try {
+            const response = await axios.get(`${API_BASE_URL}/api/admin/history`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            if (response.data && Array.isArray(response.data.data)) {
+                setHistoryData(response.data.data);
+            }
+        }
+        catch (err) {
+            if (err.response?.status !== 404) {
+                console.error("Erro ao buscar histórico:", err);
+            }
+
+            setHistoryData([]);
+        }
+        finally {
+            setIsHistoryLoading(false);
+        }
+    }, [token, API_BASE_URL]);
+
     useEffect(() => {
         if (!authLoading && isAuthenticated) {
             fetchAdminAppointments();
+            fetchAdminHistory();
         }
 
     }, [authLoading, isAuthenticated, token, user?.id, logout]);
+
+    const handleQueueUpdate = () => {
+        fetchAdminAppointments();
+        fetchAdminHistory();
+    };
 
     if (authLoading) {
         return (
@@ -266,9 +298,9 @@ function DashboardAdmin() {
 
                                         <div className="buttons-actions">
                                             <button className="btn-management" type="button"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#modalManageQueue"
-                                            onClick={() => handleManageQueueClick(appointment.id)}>
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalManageQueue"
+                                                onClick={() => handleManageQueueClick(appointment.id)}>
                                                 <i className="fa-solid fa-users-gear"></i>
                                                 Gerenciar Fila
                                             </button>
@@ -302,16 +334,97 @@ function DashboardAdmin() {
                 </div>
             </section>
 
-            <CreateServiceModal onServiceCreated={fetchAdminAppointments} />
+            <section className="create-service">
+                <h3 className="section-title">
+                    <i className="fa-solid fa-clock-rotate-left"></i>
+                    Histórico de Atendimentos
+                </h3>
+
+                {isHistoryLoading ? (
+                    <p>Carregando histórico...</p>
+                ) : historyData.length === 0 ? (
+                    <div className="service-empty">
+                        <p>
+                            <i className="fa-solid fa-circle-exclamation"></i>
+                            Nenhum histórico de atendimento foi gerado ainda.
+                        </p>
+                    </div>
+                ) : (
+                    <div className="services-list history dash-admin">
+                        {historyData.map((record) => {
+                            const { dateStr, timeStr } = formatDateTime(record.archivedAt);
+                            const accordionId = `history-${record.serviceId}`;
+
+                            return (
+                                <div className="item-service" key={accordionId}>
+                                    <div className="body-service">
+                                        <h5>Atendimento #{record.serviceId}</h5>
+
+                                        <div className="desc-service">
+                                            <p>
+                                                <span>
+                                                    <i className="fa-solid fa-archive"></i> 
+                                                    Arquivado em:
+                                                </span> 
+                                                {dateStr} às {timeStr}
+                                            </p>
+                                        </div>
+
+                                        <div className="desc-service">
+                                            <p>
+                                                <span>
+                                                    <i className="fa-solid fa-users"></i> 
+                                                    Pacientes Atendidos:
+                                                </span> 
+                                                {record.totalPatients}
+                                            </p>
+                                        </div>
+
+                                        <div className="accordion mt-3" id={`accordion-${accordionId}`}>
+                                            <div className="accordion-item">
+                                                <h2 className="accordion-header" id={`heading-${accordionId}`}>
+                                                    <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse-${accordionId}`} aria-expanded="false">
+                                                        Ver Detalhes dos Pacientes
+                                                    </button>
+                                                </h2>
+
+                                                <div id={`collapse-${accordionId}`} className="accordion-collapse collapse" data-bs-parent={`#accordion-${accordionId}`}>
+                                                    <div className="accordion-body">
+                                                        <ul className="list-group">
+                                                            {record.patients.map((patient, index) => (
+                                                                <li className="list-group-item" key={index}>
+                                                                    <span>{patient.name}</span>
+
+                                                                    <span>CPF: {formatCPF(patient.cpf)}</span>
+
+                                                                    <span>Prioridade: {patient.priority}</span>
+
+                                                                    <span className="badge bg-primary">{patient.password}</span>
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
+            </section>
+
+            <CreateServiceModal onServiceCreated={handleQueueUpdate} />
 
             <UpdateServiceModal
                 selectedAppointment={selectedAppointment}
-                onServiceUpdated={fetchAdminAppointments}
+                onServiceUpdated={handleQueueUpdate}
             />
-            
-            <ManageQueueModal 
-                serviceId={serviceIdToManage} 
-                onQueueUpdate={fetchAdminAppointments} 
+
+            <ManageQueueModal
+                serviceId={serviceIdToManage}
+                onQueueUpdate={handleQueueUpdate}
             />
         </main>
     );

@@ -146,6 +146,47 @@ button.create-service:hover {
     background-color: #0065ca;
 }
 
+.services-list.history .item-service .body-service {
+    background-color: #dddddde8;
+    border: 1px solid #1616163b;
+}
+
+.services-list.history.dash-admin h2.accordion-header button {
+    font-size: 16px !important;
+    font-weight: 500;
+    padding: 1rem;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.services-list.history.dash-admin .accordion-button::after {
+    background-size: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+.services-list.history .accordion-body, 
+.services-list.history ul.list-group {
+    border-radius: 5px;
+}
+
+.services-list.history ul.list-group .list-group-item {
+    padding: 1rem;
+}
+
+.services-list.history ul.list-group .list-group-item span {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+span.badge.bg-primary {
+    font-size: 16px;
+    font-weight: 700 !important;
+    border-radius: 5px;
+    padding: 10px;
+}
+
 @media (max-width: 1200px) {
     .services-list {
         grid-template-columns: repeat(2, 1fr);
