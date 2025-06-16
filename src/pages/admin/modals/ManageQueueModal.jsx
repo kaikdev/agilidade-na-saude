@@ -87,13 +87,19 @@ function ManageQueueModal({ serviceId, onQueueUpdate }) {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 
-                Swal.fire('Encerrado!', 'O atendimento foi arquivado com sucesso.', 'success');
+                await Swal.fire('Encerrado!', 'O atendimento foi arquivado com sucesso.', 'success');
 
                 const modalInstance = window.bootstrap.Modal.getInstance(document.getElementById('modalManageQueue'));
-                modalInstance.hide();
-                onQueueUpdate();
-            }
-            catch (err) {
+                
+                if (modalInstance) {
+                    modalInstance.hide();
+                }
+
+                if (onQueueUpdate) {
+                    onQueueUpdate();
+                }
+
+            } catch (err) {
                 Swal.fire('Erro!', 'Não foi possível arquivar. Verifique se todos os pacientes foram chamados.', 'error');
             }
         }
@@ -118,14 +124,14 @@ function ManageQueueModal({ serviceId, onQueueUpdate }) {
                             <>
                                 <div className="queue-controls">
                                     <button className="btn btn-success" onClick={handleFinalizeNext}
-                                    disabled={!nextPatient}>
+                                        disabled={!nextPatient}>
                                         <i className="fa-solid fa-bullhorn"></i>
                                         Chamar Próximo ({nextPatient ? nextPatient.password : '---'})
                                     </button>
 
                                     <button className="btn btn-danger" onClick={handleArchiveService}
-                                    disabled={queue.length > 0}
-                                    title={queue.length > 0 ? "Finalize todos os atendimentos antes de arquivar" : "Encerrar e gerar histórico"}>
+                                        disabled={queue.length > 0}
+                                        title={queue.length > 0 ? "Finalize todos os atendimentos antes de arquivar" : "Encerrar e gerar histórico"}>
                                         <i className="fa-solid fa-folder"></i>
                                         Encerrar Atendimento
                                     </button>
@@ -148,7 +154,7 @@ function ManageQueueModal({ serviceId, onQueueUpdate }) {
 
                                                     {index > 0 && (
                                                         <button className="btn btn-sm btn-warning"
-                                                        onClick={() => handlePrioritize(patient.scheduled_id)}>
+                                                            onClick={() => handlePrioritize(patient.scheduled_id)}>
                                                             <i className="fa-solid fa-up-long"></i>
                                                             Priorizar
                                                         </button>

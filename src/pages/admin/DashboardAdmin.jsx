@@ -308,7 +308,7 @@ function DashboardAdmin() {
                 selectedAppointment={selectedAppointment}
                 onServiceUpdated={fetchAdminAppointments}
             />
-
+            
             <ManageQueueModal 
                 serviceId={serviceIdToManage} 
                 onQueueUpdate={fetchAdminAppointments} 
