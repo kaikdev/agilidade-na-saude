@@ -105,6 +105,10 @@ h3.section-title i {
     filter: brightness(0.95);
 }
 
+.item-service .buttons-actions button {
+    flex: 1 1 100% !important;
+}
+
 button.btn-edit {
     background-color: #ecc719;
     color: #372e00;
@@ -112,6 +116,11 @@ button.btn-edit {
 
 button.btn-delete {
     background-color: #d33;
+    color: #fff;
+}
+
+button.btn-display {
+    background-color: #0074e5;
     color: #fff;
 }
 

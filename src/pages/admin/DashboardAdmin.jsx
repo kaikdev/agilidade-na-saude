@@ -26,6 +26,7 @@ function DashboardAdmin() {
     const fetchAdminAppointments = async () => {
         setDataLoading(true);
         setError(null);
+
         try {
             if (!isAuthenticated || !token || !user?.id) {
                 logout(false, 'Sua sessão é inválida ou expirou. Por favor, faça login novamente.');
@@ -46,25 +47,31 @@ function DashboardAdmin() {
 
         } catch (err) {
             let errorMessage = 'Ocorreu um erro ao carregar seus atendimentos.';
+            
             if (err.response) {
                 if (err.response.status === 401 || err.response.status === 403) {
                     errorMessage = 'Acesso não autorizado. Sua sessão pode ter expirado ou você não tem permissão.';
                     logout(false, errorMessage);
                     return;
-                } else {
+                }
+                else {
                     errorMessage = err.response.data.error || err.response.data.message || errorMessage;
                 }
-            } else if (err.request) {
+            } 
+            else if (err.request) {
                 errorMessage = 'Não foi possível conectar ao servidor. Verifique sua conexão ou tente novamente mais tarde.';
             }
             setError(errorMessage);
-            Swal.fire({
-                icon: 'error',
-                title: 'Erro!',
-                text: errorMessage,
-                confirmButtonText: 'Ok'
-            });
-        } 
+
+            if (err.response?.status !== 401 && err.response?.status !== 403) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro!',
+                    text: errorMessage,
+                    confirmButtonText: 'Ok'
+                });
+            }
+        }
         finally {
             setDataLoading(false);
         }
@@ -94,9 +101,9 @@ function DashboardAdmin() {
                         response.data.message,
                         'success'
                     );
-                    
-                    fetchAdminAppointments(); 
-                } 
+
+                    fetchAdminAppointments();
+                }
                 catch (err) {
                     console.error('Erro ao deletar atendimento:', err);
                     let errorMessage = 'Não foi possível deletar o atendimento.';
@@ -128,6 +135,17 @@ function DashboardAdmin() {
         if (modalElement) {
             const bootstrapModal = new window.bootstrap.Modal(modalElement);
             bootstrapModal.show();
+        }
+    };
+
+    const handleOpenDisplayPanel = (apiUrl) => {
+        if (apiUrl) {
+            const uuid = apiUrl.split('/').pop();
+            const displayPageUrl = `/display/${uuid}`;
+            window.open(displayPageUrl, '_blank', 'noopener,noreferrer');
+        }
+        else {
+            Swal.fire('Erro', 'O link para o painel de senhas não está disponível para este atendimento.', 'error');
         }
     };
 
@@ -196,9 +214,9 @@ function DashboardAdmin() {
                     <div className="services-list">
                         {appointments.map((appointment) => {
                             const { dateStr, timeStr } = appointment.service_date
-                            ? formatDateTime(appointment.service_date)
-                            : { dateStr: 'N/A', timeStr: 'N/A' };
-                            
+                                ? formatDateTime(appointment.service_date)
+                                : { dateStr: 'N/A', timeStr: 'N/A' };
+
                             return (
                                 <div className="item-service" key={appointment.id}>
                                     <div className="body-service">
@@ -241,6 +259,11 @@ function DashboardAdmin() {
                                         </div>
 
                                         <div className="buttons-actions">
+                                            <button className="btn-display" type="button" onClick={() => handleOpenDisplayPanel(appointment.links?.displayScreen)} disabled={!appointment.links?.displayScreen}>
+                                                <i className="fa-solid fa-display"></i>
+                                                Painel de Senhas
+                                            </button>
+
                                             <button className="btn-edit" type="button" onClick={() => handleEditClick(appointment)}>
                                                 <i className="fa-solid fa-pen-to-square"></i>
                                                 Editar
@@ -253,7 +276,7 @@ function DashboardAdmin() {
                                         </div>
                                     </div>
                                 </div>
-                            )   
+                            )
                         })}
                     </div>
                 )}
@@ -264,12 +287,12 @@ function DashboardAdmin() {
                     </button>
                 </div>
             </section>
-            
-            <CreateServiceModal onServiceCreated={fetchAdminAppointments}/>
-            
-            <UpdateServiceModal 
-                selectedAppointment={selectedAppointment} 
-                onServiceUpdated={fetchAdminAppointments} 
+
+            <CreateServiceModal onServiceCreated={fetchAdminAppointments} />
+
+            <UpdateServiceModal
+                selectedAppointment={selectedAppointment}
+                onServiceUpdated={fetchAdminAppointments}
             />
         </main>
     );

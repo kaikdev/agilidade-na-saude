@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './middlewares/PrivateRoute';
 import Header from './components/Header';
@@ -11,39 +11,51 @@ import DashboardAdmin from './pages/admin/DashboardAdmin';
 import DashboardUser from './pages/user/DashboardUser';
 import ProfileUserModal from './components/modals/ProfileUserModal';
 import ProfileAdminModal from './components/modals/ProfileAdminModal';
-
+import QueueDisplayPage from './pages/QueueDisplayPage';
 import './App.css'
+
+const MainLayout = () => {
+  return (
+    <>
+      <Header />
+      <>
+        <Outlet />
+      </>
+      <Footer />
+    </>
+  );
+};
 
 function App() {
   return (
     <Router>
       <AuthProvider>
-        <Header />
-
         <LoginModal />
         <RegisterModal />
         <RecoverPasswordModal />
-
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-
-          <Route path="/admin/dashboard" element={
-            <PrivateRoute role="admin">
-              <DashboardAdmin />
-            </PrivateRoute>
-          } />
-
-          <Route path="/dashboard" element={
-            <PrivateRoute role="user">
-              <DashboardUser />
-            </PrivateRoute>
-          } />
-        </Routes>
-        
         <ProfileUserModal />
         <ProfileAdminModal />
 
-        <Footer />
+        <Routes>
+          <Route path="/display/:uuid" element={<QueueDisplayPage />} />
+
+          <Route element={<MainLayout />}>
+            <Route path="/" element={<HomePage />} />
+
+            <Route path="/admin/dashboard" element={
+              <PrivateRoute role="admin">
+                <DashboardAdmin />
+              </PrivateRoute>
+            } />
+
+            <Route path="/dashboard" element={
+              <PrivateRoute role="user">
+                <DashboardUser />
+              </PrivateRoute>
+            } />
+
+          </Route>
+        </Routes>
       </AuthProvider>
     </Router>
   );
